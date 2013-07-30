@@ -1,23 +1,25 @@
-#############################################################################################
-#############################################################################################
-#############################################################################################
+==
+OT
+==
 
-AUTHOR: Alex Djalali 
-COMPANY: Stanford University
-EMAIL: alex.djalali@gmail.com
-WEBSITE: http://www.stanford.edu/~djalali/
-
-#############################################################################################
-#############################################################################################
-#############################################################################################
-
-This is the python implementation to the set-theoretic solution I give for the
-ranking problem in Partial Order Optimality Theory, which can be stated as
+This is the python implementation to Alex Djalali's set-theoretic solution for
+the ranking problem in Partial Order Optimality Theory, which can be stated as
 follows: Allowing for free variation, given a finite set of input/output pairs,
-i.e., a dataset, that a speaker knows to be part of some language, how can
+i.e., a dataset, that a speaker knows to be part of some language, how does one
 learn the set of all grammars under some constraint set compatible with that
-dataset? 
+dataset?
 
-#############################################################################################
-#############################################################################################
-#############################################################################################
+Because Partial Order Optimality Theory is a generalization of Classical
+Optimality Theory, this solution also works for all cases in Classical OT.
+
+
+Contributors
+============
+
+Main author: Alex Djalali
+Company: Stanford University
+Email: alex.djalali@gmail.com
+Website: <http://www.stanford.edu/~djalali/>
+
+Contributor: Cameron Jeffers
+Email: cwjeffers18@gmail.com
