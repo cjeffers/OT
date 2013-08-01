@@ -1,3 +1,4 @@
 *.pyc
 *.ropeproject
 .DS_Store
+ot/lattices/*
