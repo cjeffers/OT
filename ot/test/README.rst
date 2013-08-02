@@ -1,7 +1,8 @@
+=============
 Running tests
 =============
 
-The best way to run these tests is to use nose. To install::
+The best way to run these tests is to use `nose`. To install::
 
     $ pip install nose
 
@@ -17,7 +18,7 @@ The output should look something like the following::
 
     OK
 
-This is the same output as Python's basic unittest module.
+This is the same output as Python's basic ``unittest`` module.
 
 Use these tests if you're paranoid or to help you debug any additions you
 make. If any tests fail on a clean install, reinstall, and if it still fails,
