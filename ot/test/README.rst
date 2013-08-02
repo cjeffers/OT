@@ -2,12 +2,13 @@
 Running tests
 =============
 
-The best way to run these tests is to use `nose`. To install::
+The best way to run these tests is to use ``nose``. To install::
 
     $ pip install nose
 
-Then cd into the ot directory, and::
+To use::
 
+    $ cd OT/ot
     $ nosetests
 
 The output should look something like the following::
