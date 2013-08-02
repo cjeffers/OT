@@ -16,10 +16,10 @@ Optimality Theory, this solution also works for all cases in Classical OT.
 Contributors
 ============
 
-Main author: Alex Djalali
-Company: Stanford University
-Email: alex.djalali@gmail.com
-Website: <http://www.stanford.edu/~djalali/>
+:Main author: Alex Djalali
+:Company: Stanford University
+:Email: alex.djalali at gmail dot com
+:Website: <http://www.stanford.edu/~djalali/>
 
-Contributor: Cameron Jeffers
-Email: cwjeffers18@gmail.com
+:Contributor: Cameron Jeffers
+:Email: cwjeffers18 at gmail dot com
