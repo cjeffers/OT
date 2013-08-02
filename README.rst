@@ -19,7 +19,7 @@ Contributors
 :Main author: Alex Djalali
 :Company: Stanford University
 :Email: alex.djalali at gmail dot com
-:Website: <http://www.stanford.edu/~djalali/>
+:Website: http://www.stanford.edu/~djalali/
 
 :Contributor: Cameron Jeffers
 :Email: cwjeffers18 at gmail dot com

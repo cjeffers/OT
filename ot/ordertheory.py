@@ -17,34 +17,39 @@ class Powerset(object):
 class FunctionalSpace(object):
 
     def __rel(self, list0, list1):
+        """Calculate all possible relations from list0 into list1.
+
+        Returns an iterable of dicts, where keys are elements of list0
+        and values are elements of list1. Returned iterator may contain
+        duplicate dicts.
+
         """
-        Calculate all possible relations from list0 into list1. Returns an
-        iterable of dicts, where keys are elements of list0 and values are
-        elements of list1. Returned iterator may contain duplicate dicts.
-        """
+
         prod = itertools.product(list0, list1)
         pset = Powerset().powerset(prod)
         for rel in pset:
             yield dict(list(rel))
 
     def funcs(self, list0, list1):
+        """Get a list of all possible functions from list0 into list1.
+
+        Each function f is represented as a list of tuples (x, y) where
+        f(x) = y.
+
         """
-        Returns a list of all possible functions from list0 into list1. Each
-        function f is represented as a list of tuples (x, y) where f(x) = y.
-        """
+
         dom = list(list0)
         codom = list(list1)
-        if dom == [] and codom == []:
+        if not codom:
             return []
-        elif dom != [] and codom == []:
-            return []
-        elif dom == [] and codom != []:
+        elif codom and not dom:
             return [[]]
-        elif dom != [] and codom != []:
+        elif dom and codom:
             rel = self.__rel(dom, codom)
-            # tupleize the dicts in rel, uniq them, and return the ones that
-            # are the correct length
-            return [dict(tupleized).items() for tupleized in set(tuple(item.items()) for item in rel) if len(dict(tupleized).keys()) == len(dom)]
+            # tupleize and uniq the dicts in rel
+            functions = set([tuple(item.items()) for item in rel])
+            # return the lists (functions) with the right size domain
+            return [list(f) for f in functions if len(f) == len(dom)]
 
 ####################################################################################################################
 ####################################################################################################################

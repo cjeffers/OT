@@ -4,6 +4,7 @@ from .. import ordertheory
 class OrderTheoryTests(unittest.TestCase):
 
     def test_powerset(self):
+        """Powerset calculate ok?"""
         test_pset = set([(), (1,), (2,), (3,), (4,), (1, 2), (1, 3), (1, 4),
                          (2, 3), (2, 4), (3, 4), (1, 2, 3), (1, 2, 4),
                          (1, 3, 4), (2, 3, 4), (1, 2, 3, 4)])
@@ -20,6 +21,7 @@ class OrderTheoryTests(unittest.TestCase):
 
 
     def test_functional_space(self):
+        """Functional space calculated correctly?"""
         test_fspace = [[(1, 6), (2, 4), (3, 5)], [(1, 6), (2, 5), (3, 4)],
                        [(1, 4), (2, 6), (3, 4)], [(1, 4), (2, 5), (3, 4)],
                        [(1, 4), (2, 4), (3, 4)], [(1, 6), (2, 5), (3, 6)],
@@ -41,6 +43,7 @@ class OrderTheoryTests(unittest.TestCase):
 
 
     def test_strict_total_orders(self):
+        """Strict total orders calculated ok?"""
         test_orders = [frozenset([(1, 2), (1, 3), (1, 4), (2, 3), (3, 4), (2, 4)]),
                        frozenset([(1, 2), (1, 3), (1, 4), (2, 3), (4, 3), (2, 4)]),
                        frozenset([(1, 2), (3, 2), (1, 3), (1, 4), (3, 4), (2, 4)]),
@@ -71,6 +74,7 @@ class OrderTheoryTests(unittest.TestCase):
 
 
     def test_strict_orders(self):
+        """Lattices generate ok? (3-constraint)"""
         test_lat = {
             frozenset([(1, 3), (2, 3)]): {
                 'down': set([frozenset([(1, 3), (2, 3)]), frozenset([(2, 3)]),

@@ -2,7 +2,12 @@ import itertools
 import ordertheory
 
 class DataSet(object):
-    """Construct Dataset object."""
+    """Construct Dataset object.
+
+    The original DataSet object. Converts a dict containing the dataset
+    into a proper Python object, or rather a list of them.
+
+    """
 
     def __init__(self):
         """Empty initialization."""
@@ -46,6 +51,14 @@ class DataSet(object):
 #################################################################################################
 
 class Candidate(object):
+
+    """Store the information for one candidate in a dataset.
+
+    Essentially a bunch of getters and setters, this stores the data
+    (input, output, optimality, and violation vector) for one candidate
+    in a dataset.
+
+    """
 
     def __init__(self, dict0):
         self._inp = dict0['input']
@@ -91,6 +104,15 @@ class Candidate(object):
 
 class ComparativeDataSet(DataSet):
 
+    """Convert a vanilla DataSet into one with comparisons.
+
+    Set the attribute cdset to a list of Candidates, and it will compare
+    each of them, setting cdset to a dict of Candidates pointing to
+    dicts of Candidates, where the value is the ComparativeInfo between
+    the first key and second key.
+
+    """
+
     def __init__(self):
         DataSet.__init__(self)
         self._cdset = {}
@@ -104,6 +126,15 @@ class ComparativeDataSet(DataSet):
         self._cdset = self.get_cdset(value)
 
     def __comp(self, dict0, dict1):
+        """Compare two violation vectors, and return the comparison.
+
+        Return a dict with values that are lists of the constraints
+        represented as integers where dict0 strictly beats and
+        strictly loses to (respectively keyed by 'win' and 'lose') to
+        dict1, and the value keyed by 'hbounded' is true if there are
+        no constraints that dict0 loses on.
+
+        """
         win = []
         lose = []
         for n in dict0.keys():
@@ -118,6 +149,14 @@ class ComparativeDataSet(DataSet):
         return {'win': win, 'lose': lose, 'hbounded': hbounded}
 
     def __init_cdset(self, dset):
+        """Create an (empty) comparative dictionary (or dataset).
+
+        Build up a dictionary of dictionaries, where each key is a
+        Candidate cand0, and the value is an empty dict of Candidates
+        cand1, where cand0 and cand1 have the same input and at least
+        one of cand0 or cand1 is optimal.
+
+        """
 
         def helper(x, y):
             try:
@@ -152,6 +191,14 @@ class ComparativeDataSet(DataSet):
 
 class ComparativeInfo(object):
 
+    """Hold the comparisons between two candidates.
+
+    Given two candidates cand0 and cand1, contains a list of
+    constraints cand0 wins on, loses on, and whether or not cand0 is
+    harmonically bounded. Also stores the original dict of comparisons.
+
+    """
+
     def __init__(self, dict0):
         self.info = dict0
         self.win = dict0['win']
@@ -162,6 +209,15 @@ class ComparativeInfo(object):
 #################################################################################################
 
 class FunctionalDataSet(ComparativeDataSet):
+
+    """Get the functional space from losing to winning candidates.
+
+    For each pair of candidates cand0 and cand1 in the
+    ComparativeDataSet, calculate the functional space from the set of
+    losing to the set of winning constraints and add it to the info for
+    cdset[cand0][cand1]
+
+    """
 
     def __init__(self):
         ComparativeDataSet.__init__(self)
