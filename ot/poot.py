@@ -4,16 +4,34 @@ __version__ = "1.0"
 __maintainer__ = "Alex Djalali"
 __email__ = "See the author's website"
 
-##############################################################################
-##############################################################################
+"""Calculate constraint rankings and entailments in Optimality Theory.
 
+PoOT -- object for holding data and calling calculation methods
+  dset -- the dataset attribute
+  lattice -- the lattice attribute
+  get_optimal_candidates -- return the candidates that are optimal
+  get_non_optimal_candidates -- return tho other ones
+  get_harmonically_bounded_candidates -- read the name of the function
+  is_compatible_COT_grammar -- check if a grammar works with COT dset
+  is_compatible_PoOT_grammar -- check if a grammar works with PoOT dset
+  is_min_grammar -- is PoOT grammar minimally compatible?
+  min -- return all minimal grammars
+  is_max_grammar -- is PoOT grammar maximally compatible?
+  max -- return all maximal grammars
+  get_entailments -- get the set of candidate entailments
+
+Grammar -- exports functions for handling grammars
+  opt_grams -- all the grammars that are in a candidate's info
+  get_grammars -- get grammars compatible with a dataset
+
+Entailments
+
+"""
 import cPickle
 import itertools
 import dataset
 from ordertheory import Powerset
 
-##############################################################################
-##############################################################################
 
 class PoOT(object):
 
@@ -139,8 +157,6 @@ class PoOT(object):
         pootdset = PoOT.get_pootdset(PoOT.fdset, self.lattice)
         return Entailments().get_entails(pootdset, atomic)
 
-##############################################################################
-##############################################################################
 
 class Grammars(object):
 
@@ -165,8 +181,6 @@ class Grammars(object):
             neg = set([])
         return pos.difference(neg)
 
-##############################################################################
-##############################################################################
 
 class Entailments(object):
 
@@ -209,5 +223,3 @@ class Entailments(object):
                     lattice[s]['up'].add(t)
         return lattice
 
-##############################################################################
-##############################################################################
