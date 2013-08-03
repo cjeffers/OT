@@ -80,3 +80,52 @@ class FunctionalDataSetTests(unittest.TestCase):
                 self.assertEqual(fspace, r_fspace, "The functional spaces didn't match")
 
 
+class COTDataSetTests(unittest.TestCase):
+
+    def setUp(self):
+        cotds = dataset.COTDataSet()
+        cotds.dset = data.voweldset
+        cotds.cdset = cotds.dset
+        cotds.fdset = cotds.cdset
+        self.cotds = cotds
+
+    def test_cot_dset(self):
+        """COTDataSet get correct COT grammars?"""
+        lattice = ordertheory.StrictOrders().get_orders([1,2,3,4])
+        cots = self.cotds.get_cotdset(self.cotds.fdset, lattice)
+        for cand0 in cots:
+            for cand1 in cots[cand0]:
+                info = cots[cand0][cand1]
+                for f in info.fspace:
+                    maxset = lattice[frozenset(f)]['max']
+                    for s in maxset:
+                        msg = "%s in %s's maxset isn't in COT" % (str(s), str(f))
+                        self.assertTrue(s in info.cots, msg)
+
+
+class PoOTDataSetTests(unittest.TestCase):
+
+    def setUp(self):
+        pds = dataset.PoOTDataSet()
+        pds.dset = data.voweldset
+        pds.cdset = pds.dset
+        pds.fdset = pds.cdset
+        self.lattice = ordertheory.StrictOrders().get_orders([1,2,3,4])
+        pds.get_cotdset(pds.fdset, self.lattice)
+        self.pds = pds
+
+    def test_poot_dset(self):
+        """PoOTDataSet get correct PoOT grammars?"""
+        poots = self.pds.get_pootdset(self.pds.fdset, self.lattice)
+        for cand0 in poots:
+            for cand1 in poots[cand0]:
+                info = poots[cand0][cand1]
+                for c in info.cots:
+                    for p in self.lattice[c]['down']:
+                        msg = "%s in %s's downset not in PoOT" % (str(p), str(c))
+                        self.assertTrue(p in info.poots, msg)
+
+
+
+
+

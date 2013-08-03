@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='OT',
+    name='ot',
     version='0.1.0',
     author='Alex Djalali',
     author_email='alex.djalali@gmail.com',

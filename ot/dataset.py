@@ -1,3 +1,16 @@
+"""Datasets for use with ot Optimality Theory module.
+
+DataSet -- vanilla OT dataset, a list of candidate objects
+Candidate -- object for input/output pair, violation vector
+ComparativeDataSet -- adds comparison of relevant candidate pairs
+FunctionalDataSet -- adds functional space to each comparison pair
+COTDataSet -- adds COT grammars for each comparison
+PoOTDataSet -- adds PoOT grammars for each comparison
+
+Note: each *DataSet on this list is a descendant of the *DataSet above
+it.
+
+"""
 import itertools
 import ordertheory
 
@@ -47,11 +60,8 @@ class DataSet(object):
             cand.opt = True
         return dset
 
-#################################################################################################
-#################################################################################################
 
 class Candidate(object):
-
     """Store the information for one candidate in a dataset.
 
     Essentially a bunch of getters and setters, this stores the data
@@ -99,11 +109,8 @@ class Candidate(object):
     def opt(self, value):
         self._opt = value
 
-#################################################################################################
-#################################################################################################
 
 class ComparativeDataSet(DataSet):
-
     """Convert a vanilla DataSet into one with comparisons.
 
     Set the attribute cdset to a list of Candidates, and it will compare
@@ -186,11 +193,8 @@ class ComparativeDataSet(DataSet):
                 cdset[cand0][cand1] = ComparativeInfo(compinfo)
         return cdset
 
-#################################################################################################
-#################################################################################################
 
 class ComparativeInfo(object):
-
     """Hold the comparisons between two candidates.
 
     Given two candidates cand0 and cand1, contains a list of
@@ -205,11 +209,8 @@ class ComparativeInfo(object):
         self.lose = dict0['lose']
         self.hbounded = dict0['hbounded']
 
-#################################################################################################
-#################################################################################################
 
 class FunctionalDataSet(ComparativeDataSet):
-
     """Get the functional space from losing to winning candidates.
 
     For each pair of candidates cand0 and cand1 in the
@@ -233,6 +234,12 @@ class FunctionalDataSet(ComparativeDataSet):
         self._fdset = self.get_fdset(value)
 
     def get_fdset(self, cdset):
+        """Calculate the functional space for each pair of candidates.
+
+        Specifically calculate the functional space from losing to
+        winning constraints for each pair of candidates in the dataset.
+
+        """
         fspace = ordertheory.FunctionalSpace()
         for cand0 in cdset.keys():
             for cand1 in cdset[cand0].keys():
@@ -242,8 +249,6 @@ class FunctionalDataSet(ComparativeDataSet):
                 cdset[cand0][cand1] = FunctionalInfo(finfo.info)
         return cdset
 
-#################################################################################################
-#################################################################################################
 
 class FunctionalInfo(ComparativeInfo):
 
@@ -251,29 +256,30 @@ class FunctionalInfo(ComparativeInfo):
         ComparativeInfo.__init__(self, dict0)
         self.fspace = dict0['fspace']
 
-#################################################################################################
-#################################################################################################
 
 class COTDataSet(FunctionalDataSet):
+    """Store the Classical OT (COT) grammars that satisfy the dataset"""
 
     def get_cotdset(self, fdset, lattice):
+        """Calculate the COT grammars for each pair of candidates.
+
+        For each pair cand0 and cand1, add a set containing the maxsets
+        of all the functions from losing to winning.  The maxset of
+        each function (considered as a partial order) is one of the
+        COT grammars that satisfies that comparison.
+
+        """
         for cand0 in fdset.keys():
             for cand1 in fdset[cand0].keys():
                 s = set([])
                 cotinfo = fdset[cand0][cand1]
-                if cotinfo.fspace == []:
-                    cotinfo.info.update({'cots': s})
-                    fdset[cand0][cand1] = COTInfo(cotinfo.info)
-                else:
-                    for f in cotinfo.fspace:
-                        cots = lattice[frozenset(f)]['max']
-                        s.update(cots)
-                    cotinfo.info.update({'cots': s})
-                    fdset[cand0][cand1] = COTInfo(cotinfo.info)
+                for f in cotinfo.fspace:
+                    cots = lattice[frozenset(f)]['max']
+                    s.update(cots)
+                cotinfo.info.update({'cots': s})
+                fdset[cand0][cand1] = COTInfo(cotinfo.info)
         return fdset
 
-#################################################################################################
-#################################################################################################
 
 class COTInfo(FunctionalInfo):
 
@@ -281,26 +287,33 @@ class COTInfo(FunctionalInfo):
         FunctionalInfo.__init__(self, dict0)
         self.cots = dict0['cots']
 
-#################################################################################################
-#################################################################################################
 
 class PoOTDataSet(COTDataSet):
+    """Store the Partial order OT (PoOT) grammars for the dataset"""
 
     def get_pootdset(self, fdset, lattice):
+        """Calculate the PoOT grammars for each pair of candidates
+
+        For each pair cand0 and cand1, add a set containing the union
+        of the downsets of all the COT grammars that satisfy the
+        cand0 ~ cand1 comparison. Each element of the downset of a COT
+        grammar is a subset of that grammar, and thus also satisfies the
+        requirements of the candidate pair.
+
+        """
         cotdset = super(PoOTDataSet, self).get_cotdset(fdset, lattice)
         for cand0 in cotdset.keys():
             for cand1 in cotdset[cand0].keys():
-                pootinfo = cotdset[cand0][cand1]
-                if pootinfo.cots == set([]):
-                    poots = pootinfo.cots
+                pinfo = cotdset[cand0][cand1]
+                if pinfo.cots == set([]):
+                    poots = pinfo.cots
                 else:
-                    poots = set.union(*map(set, [lattice[frozenset(cot)]['down'] for cot in pootinfo.cots]))
-                pootinfo.info.update({'poots': poots})
-                cotdset[cand0][cand1] = PoOTInfo(pootinfo.info)
+                    downsets = [lattice[frozenset(cot)]['down'] for cot in pinfo.cots]
+                    poots = set.union(*map(set, downsets))
+                pinfo.info.update({'poots': poots})
+                cotdset[cand0][cand1] = PoOTInfo(pinfo.info)
         return cotdset
 
-#################################################################################################
-#################################################################################################
 
 class PoOTInfo(COTInfo):
 
@@ -308,5 +321,3 @@ class PoOTInfo(COTInfo):
         COTInfo.__init__(self, dict0)
         self.poots = dict0['poots']
 
-#################################################################################################
-#################################################################################################

@@ -1,18 +1,26 @@
+"""Perform order and set-theoretic operations.
+
+Powerset -- return the powerset of any iterable
+FunctionalSpace -- get the functional space from one iterable to another
+StrictTotalOrders -- get the strict total orders for an iterable
+StrictOrders -- get the lattices for an iterable
+
+"""
 import itertools
 import pickle
 
 class Powerset(object):
 
     def powerset(self, iterable):
-        """
-        Returns an iterable of all possible subsets of the argument, where each
-        subset is represented as a tuple.
+        """Return an iterable of all possible subsets.
+
+        Each subset is represented as a tuple of zero or more elements
+        from iterable.
+
         """
         l = list(iterable)
         return itertools.chain.from_iterable(itertools.combinations(l, r) for r in range(len(l)+1))
 
-####################################################################################################################
-####################################################################################################################
 
 class FunctionalSpace(object):
 
@@ -24,7 +32,6 @@ class FunctionalSpace(object):
         duplicate dicts.
 
         """
-
         prod = itertools.product(list0, list1)
         pset = Powerset().powerset(prod)
         for rel in pset:
@@ -37,7 +44,6 @@ class FunctionalSpace(object):
         f(x) = y.
 
         """
-
         dom = list(list0)
         codom = list(list1)
         if not codom:
@@ -51,16 +57,16 @@ class FunctionalSpace(object):
             # return the lists (functions) with the right size domain
             return [list(f) for f in functions if len(f) == len(dom)]
 
-####################################################################################################################
-####################################################################################################################
 
 class StrictTotalOrders(object):
 
     def __recurse(self, l, orders=[]):
-        """
-        Recursively travel through l, creating tuples where the first element
-        of l is ordered before each of the following elements, and appending
-        those to the orders list.
+        """Get a set-based representation of an order.
+
+        Recursively travel through l, creating tuples where the first
+        element of l is ordered before each of the following elements,
+        and appending those to the orders list.
+
         """
         if l:
             orders = orders + list(itertools.product([l[0]], list(l[1:])))
@@ -69,28 +75,29 @@ class StrictTotalOrders(object):
             return orders
 
     def orders(self, iterable):
-        """
-        Return an iterator over all the strict total orders for the given
-        argument. Gives one strict total order for each possible permutation.
-        Each strict total order is represented as a frozenset of tuples (x, y)
-        such that x >> y.
+        """Return an iterator over all strict total orders.
+
+        Gives one strict total order for each possible permutation.
+        Each strict total order is represented as a frozenset of tuples
+        (x, y) such that x >> y.
+
         """
         l = list(iterable)
         permutations = itertools.permutations(l)
         for permutation in permutations:
             yield frozenset(self.__recurse(permutation))
 
-####################################################################################################################
-####################################################################################################################
 
 class StrictOrders(object):
-
-    lattice = {}
+    def __init__(self):
+        self.lattice = {}
 
     def __is_not_transitive(self, relation):
-        """
-        Returns True if there is some pair (x,y) in the relation such that for
-        some z (x,z) and (z,y) are in the relation, but (x,y) is not.
+        """Return True if relation is not transitive.
+
+        A relation r is not transitive if there is a pair (x,y) in r
+        such that for some z, (x,z) and (z,y) are in r but (x,y) is not.
+
         """
         product = itertools.product(list(relation), list(relation))
         for x in product:
@@ -99,9 +106,11 @@ class StrictOrders(object):
                     return True
 
     def __orders(self, l):
-        """
-        Returns an iterator over all transitive relations that are subsets of
-        each strict total order of l.
+        """Return an iterator over all orders of l.
+
+        An order o in l is calculated as a transitive relation that is a
+        subset of a possible strict total order of l.
+
         """
         torders = list(StrictTotalOrders().orders(l))
         for order in torders:
@@ -111,9 +120,9 @@ class StrictOrders(object):
                     yield frozenset(relation)
 
     def get_orders(self, iterable):
-        """
-        Returns a dict representing the lattice of all partial orders of
-        iterable. Each partial order is a key into the lattice, and the value
+        """Return the lattice of all partial orders of iterable.
+
+        Each partial order is a key into the lattice, and the value
         is a dict containing that order's maxset, upset, and downset.
         """
         l = list(iterable)
@@ -136,11 +145,10 @@ class StrictOrders(object):
         return self.lattice
 
     def write_to_pickle(self, iterable):
-        """
-        Writes the lattice of orders of iterable to a pickle.
-        """
+        """Write the lattice of orders of iterable to a pickle."""
         l = list(iterable)
         length = len(l)
-        pickle.dump(self.get_orders(l), open('gspace_%scons.p' %(length), 'wb'))
+        with open('gspace_%scons.p' % length, 'wb') as f:
+            pickle.dump(self.get_orders(l), f)
         return 'Orders written.'
 
