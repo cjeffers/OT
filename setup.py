@@ -8,5 +8,5 @@ setup(
     packages=['ot', 'ot.test'],
     url='https://github.com/alexdjalali/OT',
     description='Rank optimality theory constraints, entailments, etc.',
-    long_description=open('README').read()
+    long_description=open('README.rst').read()
 )
