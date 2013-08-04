@@ -2,6 +2,7 @@ import unittest
 from .. import ordertheory
 from .. import dataset
 from .. import data
+import cPickle
 
 class DataSetTests(unittest.TestCase):
 
@@ -91,7 +92,8 @@ class COTDataSetTests(unittest.TestCase):
 
     def test_cot_dset(self):
         """COTDataSet get correct COT grammars?"""
-        lattice = ordertheory.StrictOrders().get_orders([1,2,3,4])
+        with open('../lattices/gspace_4cons.p', 'rb') as f:
+            lattice = cPickle.load(f)
         cots = self.cotds.get_cotdset(self.cotds.fdset, lattice)
         for cand0 in cots:
             for cand1 in cots[cand0]:
@@ -110,7 +112,8 @@ class PoOTDataSetTests(unittest.TestCase):
         pds.dset = data.voweldset
         pds.cdset = pds.dset
         pds.fdset = pds.cdset
-        self.lattice = ordertheory.StrictOrders().get_orders([1,2,3,4])
+        with open('../lattices/gspace_4cons.p', 'rb') as f:
+            self.lattice = cPickle.load(f)
         pds.get_cotdset(pds.fdset, self.lattice)
         self.pds = pds
 

@@ -1,9 +1,3 @@
-__author__ = "Alex Djalali"
-__date__ = "2013-02-15"
-__version__ = "1.0"
-__maintainer__ = "Alex Djalali"
-__email__ = "See the author's website"
-
 """Calculate constraint rankings and entailments in Optimality Theory.
 
 PoOT -- object for holding data and calling calculation methods
@@ -25,6 +19,7 @@ Grammar -- exports functions for handling grammars
   get_grammars -- get grammars compatible with a dataset
 
 Entailments
+  get_entails -- get the entailmentes between sets of candidates
 
 """
 import cPickle
@@ -46,6 +41,8 @@ class PoOT(object):
     @dset.setter
     def dset(self, value):
         self.lattice = value
+        if type(value) is tuple:
+            value = value[0]
         self._dset = self._dset + value
 
     @property
@@ -54,103 +51,94 @@ class PoOT(object):
 
     @lattice.setter
     def lattice(self, value):
-        cons = len(value[0]['vvector'].keys())
-        self._lattice = cPickle.load(open('lattices/gspace_%scons.p' %(cons,), 'rb'))
+        if type(value) is tuple:
+            picklename = value[1]
+        else:
+            cons = len(value[0]['vvector'].keys())
+            picklename = 'lattices/gspace_%scons.p' % cons
+        with open(picklename, 'rb') as f:
+            self._lattice = cPickle.load(f)
 
     def get_optimal_candidates(self):
         """Get all optimal candidates."""
         PoOT = dataset.PoOTDataSet()
         PoOT.dset = self.dset
-        opt = [cand.cand for cand in PoOT.dset if cand.opt == True]
+        opt = [cand.cand for cand in PoOT.dset if cand.opt]
         return opt
 
     def get_nonoptimal_candidates(self):
         """Get all non-optimal candidates."""
         PoOT = dataset.PoOTDataSet()
         PoOT.dset = self.dset
-        nonopt = [cand.cand for cand in PoOT.dset if cand.opt == False]
+        nonopt = [cand.cand for cand in PoOT.dset if not cand.opt]
         return nonopt
 
     def get_harmonically_bounded_candidates(self):
-        """Get all harmonically bound candidates."""
+        """Get all harmonically bound candidate pairs"""
         l = []
         PoOT = dataset.PoOTDataSet()
         PoOT.dset = self.dset
         PoOT.cdset = PoOT.dset
         for cand0 in PoOT.cdset.keys():
             for cand1 in PoOT.cdset[cand0].keys():
-                if PoOT.cdset[cand0][cand1].hbounded == True:
+                if PoOT.cdset[cand0][cand1].hbounded:
                     l.append((cand0.cand, cand1.cand))
-                else:
-                    pass
         return l
 
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
         PoOT = dataset.PoOTDataSet()
         PoOT.dset = self.dset
-        PoOT.fdset = PoOT.dset
+        PoOT.cdset = PoOT.dset
+        PoOT.fdset = PoOT.cdset
         pootdset = PoOT.get_pootdset(PoOT.fdset, self.lattice)
         return Grammars().get_grammars(pootdset, classical)
 
     def is_compatible_COT_grammar(self, grammar):
-        """Check whether COT grammar is compatible
-        with the dataset."""
+        """Check whether COT grammar is compatible with the dataset."""
         cots = self.get_grammars(classical=True)
-        if grammar in cots:
-            return True
-        else:
-            return False
+        return grammar in cots
 
     def is_compatible_PoOT_grammar(self, grammar):
-        """Check whether PoOT grammar is compatible
-        with the dataset."""
+        """Check whether PoOT grammar is compatible with the dataset."""
         poots = self.get_grammars(classical=False)
-        if grammar in poots:
-            return True
-        else:
-            return False
+        return grammar in poots
 
     def is_min_grammar(self, grammar):
-        """Check whether PoOT grammar is a
-        minimally compatible grammar."""
-        up = set(self.lattice[grammar]['down'])
+        """Check whether PoOT grammar is minimally compatible."""
+        down = set(self.lattice[grammar]['down'])
         grams = self.get_grammars(classical=False)
-        if len(up.intersection(grams)) == 1:
-            return True
-        else:
-            return False
+        return len(down.intersection(grams)) == 1
 
     def min(self, grammars):
         """Get all minimal grammars."""
         s = set([])
         for grammar in grammars:
-            if self.is_min_grammar(grammar) == True:
+            if self.is_min_grammar(grammar):
                 s.add(grammar)
         return s
 
     def is_max_grammar(self, grammar):
-        """Check whether PoOT grammar is a
-        maximally compatible grammar."""
+        """Check whether PoOT grammar is maximally compatible."""
         up = set(self.lattice[grammar]['up'])
         grams = self.get_grammars(classical=False)
-        if len(up.intersection(grams)) == 1:
-            return True
-        else:
-            return False
+        return len(up.intersection(grams)) == 1
 
     def max(self, grammars):
         """Get all maximal grammars."""
         s = set([])
         for grammar in grammars:
-            if self.is_max_grammar(grammar) == True:
+            if self.is_max_grammar(grammar):
                 s.add(grammar)
         return s
 
     def get_entailments(self, atomic=True):
-        """Get candidate entailments. If 'atomic = True',
-        get atomic entailments.  Else, get entailments between
-        sets of candidates."""
+        """Get candidate entailments.
+
+        If 'atomic = True', get atomic entailments.  Else, get
+        entailments between sets of candidates.
+
+        """
         PoOT = dataset.PoOTDataSet()
         PoOT.edset = self.dset
         PoOT.fdset = PoOT.edset
@@ -163,21 +151,29 @@ class Grammars(object):
     def opt_grams(self, candinfo, classical=True):
         l = []
         for cand0 in candinfo.keys():
-            if classical == True:
+            if classical:
                 l.append(candinfo[cand0].cots)
-            elif classical == False:
+            else:
                 l.append(candinfo[cand0].poots)
         return set.intersection(*map(set, l))
 
     def get_grammars(self, dset, classical=True):
         """Get grammars compatible with dataset."""
         try:
-            pos = set.intersection(*map(set, [self.opt_grams(dset[cand], classical) for cand in dset.keys() if cand.opt == True]))
-        except:
+            pos_grammars = []
+            for cand in dset:
+                if cand.opt:
+                    pos_grammars.append(self.opt_grams(dset[cand], classical))
+            pos = set.intersection(*map(set, pos_grammars))
+        except KeyError:
             pos = set([])
         try:
-            neg = set.union(*map(set, [self.opt_grams(dset[cand], classical) for cand in dset.keys() if cand.opt == False]))
-        except:
+            neg_grammars = []
+            for cand in dset:
+                if not cand.opt:
+                    neg_grammars.append(self.opt_grams(dset[cand], classical))
+            neg = set.union(*map(set, neg_grammars))
+        except KeyError:
             neg = set([])
         return pos.difference(neg)
 
@@ -185,8 +181,12 @@ class Grammars(object):
 class Entailments(object):
 
     def __mapping(self, dset):
-        """Map candidates to the set of all and only the
-        PoOT grammars that make that candidate optimal."""
+        """Map candidates to the PoOT grammars that make it optimal.
+
+        Return a list of tuples pairing the candidate to the set of all
+        and only the PoOT grammars that make that candidate optimal.
+
+        """
         grams = Grammars()
         return [(cand, grams.opt_grams(dset[cand])) for cand in dset.keys()]
 
@@ -194,26 +194,26 @@ class Entailments(object):
         """Get entailments between (sets of) candidates."""
         lattice = {}
         mapping = self.__mapping(dset)
-        if atomic == True:
+        if atomic:
             prod = itertools.product(mapping, mapping)
-        elif atomic == False:
+        else:
             pset = list(Powerset().powerset(mapping))
             prod = itertools.product(pset, pset)
         for x, y in prod:
             if x != () and y != ():
-                if atomic == True:
+                if atomic:
                     s = frozenset([x[0].cand])
                     t = frozenset([y[0].cand])
                     u = x[1]
                     v = y[1]
-                elif atomic == False:
+                else:
                     s = frozenset([pair[0].cand for pair in x])
                     t = frozenset([pair[0].cand for pair in y])
                     u = set.intersection(*map(set, [pair[1] for pair in x]))
                     v = set.intersection(*map(set, [pair[1] for pair in y]))
                 try:
                     lattice[s]
-                except:
+                except KeyError:
                     lattice.update({s:{'up':set([]), 'down':set([])}})
                 if u.issuperset(v):
                     lattice[s]['down'].add(t)
@@ -222,4 +222,10 @@ class Entailments(object):
                 elif u.issubset(v):
                     lattice[s]['up'].add(t)
         return lattice
+
+
+
+
+
+
 
