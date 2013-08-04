@@ -26,13 +26,16 @@ import cPickle
 import itertools
 import dataset
 from ordertheory import Powerset
+from lattice import PartialOrderLattice as POLattice
 
 
 class PoOT(object):
 
-    def __init__(self):
+    def __init__(self, lat_dir, mongo_db=None):
         self._dset    = []
         self._lattice = {}
+        self._lat_dir = lat_dir
+        self._mongo_db = mongo_db
 
     @property
     def dset(self):
@@ -51,13 +54,8 @@ class PoOT(object):
 
     @lattice.setter
     def lattice(self, value):
-        if type(value) is tuple:
-            picklename = value[1]
-        else:
-            cons = len(value[0]['vvector'].keys())
-            picklename = 'lattices/gspace_%scons.p' % cons
-        with open(picklename, 'rb') as f:
-            self._lattice = cPickle.load(f)
+        cons = len(value[0]['vvector'])
+        self._lattice = POLattice(cons, self._lat_dir, self._mongo_db)
 
     def get_optimal_candidates(self):
         """Get all optimal candidates."""

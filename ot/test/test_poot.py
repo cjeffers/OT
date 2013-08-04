@@ -8,25 +8,26 @@ from .. import data
 class TestPoOT(object):
 
     def setUp(self):
-        self.p = poot.PoOT()
-        self.picklestr = '../lattices/gspace_4cons.p'
-        with open(self.picklestr, 'rb') as f:
+        self.p = poot.PoOT(lat_dir='../lattices')
+        with open('../lattices/gspace_4cons.p', 'rb') as f:
             self.lattice = cPickle.load(f)
 
     def test_lattice_setter(self):
         """PoOT lattice setter work?"""
-        self.p.lattice = (data.voweldset, self.picklestr)
-        assert self.p.lattice == self.lattice
+        self.p.lattice = data.voweldset
+        # go find privately stored lattice inside Lattice object
+        assert self.p._lattice._lattice == self.lattice
 
     def test_dset_setter(self):
         """PoOT dset setter work?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         assert self.p.dset == data.voweldset
-        assert self.p.lattice == self.lattice
+        # go find privately stored lattice inside Lattice object
+        assert self.p._lattice._lattice == self.lattice
 
     def test_get_optimal_candidates(self):
         """Gets all and only the optimal candidates?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         opt_cands = [('ovea', 'o.ve.a'), ('ovea', 'o.vee'), ('idea', 'i.de.a'),
                      ('lasi-a', 'la.si.a'), ('lasi-a', 'la.sii'),
                      ('rasia', 'ra.si.a')]
@@ -34,19 +35,19 @@ class TestPoOT(object):
 
     def test_get_nonoptimal_candidates(self):
         """Gets all and only nonoptimal candidates?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         non_opt_cands = [('idea', 'i.dee'), ('rasia', 'ra.sii')]
         assert self.p.get_nonoptimal_candidates() == non_opt_cands
 
     def test_get_hbounded_candidates(self):
         """Gets all and only the harmonically bounded candidates?"""
-        self.p.dset = (data.hbounded, self.picklestr)
+        self.p.dset = data.hbounded
         hbounded = [(('i1', 'o1'), ('i1', 'o2'))]
         assert self.p.get_harmonically_bounded_candidates() == hbounded
 
     def test_get_poot_grammars(self):
         """Gets all the right PoOT grammars?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         grammars = set([
             frozenset([(3, 1), (2, 1)]),
             frozenset([(3, 1), (2, 4)]),
@@ -64,7 +65,7 @@ class TestPoOT(object):
 
     def test_get_cot_grammars(self):
         """Gets all the right COT grammars?"""
-        self.p.dset = (data.hbounded, self.picklestr)
+        self.p.dset = data.hbounded
         cot_grammars = set([
             frozenset([(3, 1), (2, 1), (2, 3), (4, 3), (4, 2), (4, 1)]),
             frozenset([(3, 2), (3, 1), (2, 1), (4, 3), (4, 2), (4, 1)]),
@@ -95,7 +96,7 @@ class TestPoOT(object):
 
     def test_is_compatible_cot_grammar(self):
         """Can check for COT compatibility?"""
-        self.p.dset = (data.hbounded, self.picklestr)
+        self.p.dset = data.hbounded
         yes = frozenset([(3, 2), (3, 4), (3, 1), (2, 1), (4, 2), (4, 1)])
         no = frozenset([(3, 1), (4, 1), (2, 4), (2, 1)])
         assert self.p.is_compatible_COT_grammar(yes)
@@ -103,7 +104,7 @@ class TestPoOT(object):
 
     def test_is_compatible_poot_grammar(self):
         """Can check for PoOT compatibility?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         yes = frozenset([(3, 2), (3, 1), (2, 1)])
         no = frozenset([(1, 2), (1, 3), (2, 3)])
         assert self.p.is_compatible_PoOT_grammar(yes)
@@ -111,7 +112,7 @@ class TestPoOT(object):
 
     def test_is_min_grammar(self):
         """Can check for a grammars minimality?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         yes = frozenset([(3, 1), (2, 1)])
         no = frozenset([(3, 1), (2, 3), (2, 4), (2, 1)])
         assert self.p.is_min_grammar(yes)
@@ -119,13 +120,13 @@ class TestPoOT(object):
 
     def test_poot_min(self):
         """Gets min grammars?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         min_grams = set([frozenset([(3, 1), (2, 4)]), frozenset([(3, 1), (2, 1)])])
         assert self.p.min(self.p.get_grammars(False)) == min_grams
 
     def test_is_max_grammar(self):
         """Can check for a grammars maximality?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         yes = frozenset([(4, 1), (3, 1), (2, 3), (2, 4), (2, 1)])
         no = frozenset([(3, 1), (2, 1), (2, 4)])
         assert self.p.is_max_grammar(yes)
@@ -133,14 +134,14 @@ class TestPoOT(object):
 
     def test_poot_max(self):
         """Gets max grammars?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         max_grams = set([frozenset([(4, 1), (3, 1), (2, 3), (2, 4), (2, 1)]),
                          frozenset([(3, 2), (3, 1), (4, 1), (2, 1)])])
         assert self.p.max(self.p.get_grammars(False)) == max_grams
 
     def test_get_entailments(self):
         """Gets entailments?"""
-        self.p.dset = (data.voweldset, self.picklestr)
+        self.p.dset = data.voweldset
         ents = {
             frozenset([('ovea', 'o.vee')]): {
                 'down': set([
