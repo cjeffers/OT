@@ -22,7 +22,6 @@ Entailments
   get_entails -- get the entailmentes between sets of candidates
 
 """
-import cPickle
 import itertools
 import dataset
 from ordertheory import Powerset
