@@ -2,3 +2,4 @@
 *.ropeproject
 .DS_Store
 ot/lattices/*
+ot/test/lattices/*

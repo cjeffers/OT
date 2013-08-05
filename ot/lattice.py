@@ -7,7 +7,7 @@ Lattice -- stores information and methods for implementing a lattice
 import cPickle
 import os
 import ordertheory
-import pymongo
+#import pymongo
 
 
 class PartialOrderLattice(object):
@@ -38,18 +38,22 @@ class PartialOrderLattice(object):
         mongo_db evaluates to True, lat_dir is ignored and the
         instance becomes effectively a frontend to the MongoDB
         collection representing the lattice of the desired size,
-        stored in that database.
+        stored in that database. If both lat_dir and mongo_db evaluate
+        to False, the _lattice attribute is set to None, and an error
+        will be raised if the access is attempted.
 
         """
         self.set_n = set_n
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
         if self._mongo_db:
-            self._mongo_coll = self._mongo_db.__getattr__('lat%d' % self.set_n)
+            self._mongo_coll = getattr(self._mongo_db, 'lat%d' % self.set_n)
             self._lattice = None
-        else:
-            self._lattice = self.__read_lat_from_pickle(self.set_n, self._lat_dir)
+        elif self._lat_dir:
+            self._lattice = self.__read_from_pickle(self.set_n, self._lat_dir)
             self._mongo_coll = None
+        else:
+            self._lattice = None
 
     def __getitem__(self, key):
         """Get a dict with the maxset, upset, and downset for key.
@@ -64,14 +68,85 @@ class PartialOrderLattice(object):
         if self._mongo_db:
             mongo_doc = self._mongo_coll.find_one({'set': str(sorted(key))})
             return eval(mongo_doc['value'])
-        else:
+        elif self._lattice is not None:
             return self._lattice[key]
+        else:
+            raise KeyError('Lattice must be initialized from a pickle, '
+                           'MongoDB, or generated.')
 
+    def generate_lattice(self):
+        """Generates a lattice from scratch.
 
-    def __read_lat_from_pickle(self, size, dirname):
+        Consider this fair warning: lattices of partial orders get
+        huge, fast.  In 2013, with a new core i5 and 6GB memory, there
+        simply weren't enough resources to generate a 6-constraint
+        lattice.  If you try and generate anything with set_n larger
+        than 5, you're on your own.
+
+        """
+        if not self._lattice:
+            lat = ordertheory.StrictOrders().get_orders(xrange(1, self.set_n+1))
+            self._lattice = lat
+
+    def __read_from_pickle(self, size, dirname):
+        """Read a lattice of size 'size' from a pickle in dirname."""
         filename = 'gspace_%scons.p' % size
         with open(os.path.join(dirname, filename), 'rb') as f:
             return cPickle.load(f)
+
+    def _checks_if_writable(fun, *args, **kwargs):
+        """Decorator to check if the lattice can be written from"""
+        def wrapper(self, *args, **kwargs):
+            if not self._lattice:
+                raise TypeError('Lattice must be initialized from a pickle '
+                                'or generated.')
+            elif self._mongo_db:
+                raise TypeError('Lattice initialized from MongoDB cannot be '
+                                'written.')
+            else:
+                return fun(self, *args, **kwargs)
+        return wrapper
+
+    @_checks_if_writable
+    def write_to_pickle(self, lat_dir):
+        """Write the current lattice to a pickle in lat_dir.
+
+        Only supports lattices that have been explicitly generated or
+        loaded from a file themselves.  Attempting to write a lattice
+        that has been initialized from a pymongo.Database instance will
+        result in a TypeError.  Writing from a lattice that has not been
+        initialized will also result in a TypeError.
+
+        """
+        filename = os.path.join(lat_dir, 'gspace_%dcons.p' % self.set_n)
+        with open(filename, 'wb') as f:
+            cPickle.dump(self._lattice, f)
+
+    @_checks_if_writable
+    def write_to_mongo(self, db):
+        """Write the lattice to the given instance MongoDB database.
+
+        Stores the currently loaded lattice in a collection within the
+        given database.  The collection will be named 'latN', where N is
+        equal to self.set_n.  For example, a lattice where set_n = 4
+        will be stored in 'db.lat4'.  Any previous collection with that
+        name will be dropped, so be sure you are ok with that.  This
+        function, like write_to_pickle, only supports lattices that have
+        either been loaded from a file or generated explicitly.  Wrtiing
+        from a MongoDB-backed lattice will throw a TypeError.
+
+        """
+        col_name = 'lat%d' % self.set_n
+        mongo_col = getattr(db, col_name)
+        mongo_col.drop()
+        for k, v in self._lattice.iteritems():
+            doc = {'set': str(sorted(k)), 'value': str(v)}
+            mongo_col.insert(doc)
+
+
+
+
+
 
 
 
