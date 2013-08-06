@@ -66,7 +66,7 @@ all_optimal = [
                 }
 ]
 
-iequal = [
+iequal_true = [
 
                 {   'input': 'i1',
                     'output': 'o1',
@@ -80,6 +80,22 @@ iequal = [
                     'optimal': True,
                 }
 ]
+
+iequal_opposite = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
 voweldset = [
                 {   'input': 'ovea',
                     'output': 'o.ve.a',
