@@ -214,7 +214,7 @@ class TestPoOT(object):
     def test_dset_edge_cases(self):
         self.setUp()
         gspace = self.lattice[frozenset([])]['up']
-        tests = {'all_optimal': set([]), 'all_zeros': set([]),
+        tests = {'all_optimal': set([]), 'all_zeros': gspace,
                  'iequal': gspace}
         for k, v in tests.iteritems():
             yield self.check_dset_edge_case, k, v

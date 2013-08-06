@@ -151,7 +151,7 @@ class Grammars(object):
     def opt_grams(self, candinfo, classical=True):
         l = []
         for cand0 in candinfo.keys():
-            if classical:
+            if classical and not candinfo[cand0].iequal:
                 l.append(candinfo[cand0].cots)
             else:
                 l.append(candinfo[cand0].poots)

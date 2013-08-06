@@ -179,13 +179,11 @@ class ComparativeDataSet(DataSet):
         for x, y in itertools.product(dset, dset):
             if x.opt == True:
                 if x.inp == y.inp:
-                    if x.out != y.out:
-                        helper(x, y)
+                    helper(x, y)
             if x.opt == False:
                 if y.opt == True:
                     if x.inp == y.inp:
-                        if x.out != y.out:
-                            helper(x, y)
+                        helper(x, y)
         return self._cdset
 
     def get_cdset(self, dset):
@@ -279,9 +277,11 @@ class COTDataSet(FunctionalDataSet):
             for cand1 in fdset[cand0].keys():
                 s = set([])
                 cotinfo = fdset[cand0][cand1]
-                for f in cotinfo.fspace:
-                    cots = lattice[frozenset(f)]['max']
-                    s.update(cots)
+                if not cotinfo.iequal:
+                    if cotinfo.fspace:
+                        for f in cotinfo.fspace:
+                            cots = lattice[frozenset(f)]['max']
+                            s.update(cots)
                 cotinfo.info.update({'cots': s})
                 fdset[cand0][cand1] = COTInfo(cotinfo.info)
         return fdset
