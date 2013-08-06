@@ -156,21 +156,22 @@ class Grammars(object):
 
     def get_grammars(self, dset, classical=True):
         """Get grammars compatible with dataset."""
+        pos_grammars = []
+        for cand in dset:
+            if cand.opt:
+                pos_grammars.append(self.opt_grams(dset[cand], classical))
         try:
-            pos_grammars = []
-            for cand in dset:
-                if cand.opt:
-                    pos_grammars.append(self.opt_grams(dset[cand], classical))
             pos = set.intersection(*map(set, pos_grammars))
-        except KeyError:
+        except TypeError:  # case when pos_grammars is empty
             pos = set([])
+
+        neg_grammars = []
+        for cand in dset:
+            if not cand.opt:
+                neg_grammars.append(self.opt_grams(dset[cand], classical))
         try:
-            neg_grammars = []
-            for cand in dset:
-                if not cand.opt:
-                    neg_grammars.append(self.opt_grams(dset[cand], classical))
             neg = set.union(*map(set, neg_grammars))
-        except KeyError:
+        except TypeError:  # case when neg_grammars is empty
             neg = set([])
         return pos.difference(neg)
 

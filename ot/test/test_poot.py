@@ -205,6 +205,16 @@ class TestPoOT(object):
         }
         assert self.p.get_entailments() == ents
 
+    def check_dset_edge_case(self, dset, grammars):
+        """Handles edge cases?"""
+        self.p.dset = getattr(data, dset)
+        assert self.p.get_grammars(False) == grammars
+
+    def test_dset_edge_cases(self):
+        tests = {'no_optimal': set([]), 'all_optimal': set([]),
+                 'all_zeros': set([])}
+        for k, v in tests.iteritems():
+            yield self.check_dset_edge_case,  k, v
 
 
 
