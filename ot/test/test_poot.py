@@ -1,6 +1,7 @@
 """Tests for poot module"""
 
 import cPickle
+from nose.tools import raises
 from .. import poot
 from .. import data
 
@@ -211,11 +212,18 @@ class TestPoOT(object):
         assert self.p.get_grammars(False) == grammars
 
     def test_dset_edge_cases(self):
-        tests = {'no_optimal': set([]), 'all_optimal': set([]),
-                 'all_zeros': set([])}
+        self.setUp()
+        gspace = self.lattice[frozenset([])]['up']
+        tests = {'all_optimal': set([]), 'all_zeros': set([]),
+                 'iequal': gspace}
         for k, v in tests.iteritems():
-            yield self.check_dset_edge_case,  k, v
+            yield self.check_dset_edge_case, k, v
 
+    @raises(ValueError)
+    def test_no_optimal_candidates(self):
+        """Raises ValueError on no optimal candidates?"""
+        self.p.dset = data.no_optimal
+        self.get_grammars(False)
 
 
 

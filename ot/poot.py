@@ -42,6 +42,9 @@ class PoOT(object):
 
     @dset.setter
     def dset(self, value):
+        opts = [value[i]['optimal'] for i, cand in enumerate(value)]
+        if not any(opts):
+            raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
         if type(value) is tuple:
             value = value[0]

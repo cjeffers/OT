@@ -32,7 +32,7 @@ all_zeros = [
                 {   'input': 'i1',
                     'output': 'o1',
                     'vvector': {1:0, 2:0, 3:0, 4:0},
-                    'optimal': False
+                    'optimal': True
                 }
 ]
 
@@ -66,6 +66,20 @@ all_optimal = [
                 }
 ]
 
+iequal = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
 voweldset = [
                 {   'input': 'ovea',
                     'output': 'o.ve.a',

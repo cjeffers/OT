@@ -144,16 +144,21 @@ class ComparativeDataSet(DataSet):
         """
         win = []
         lose = []
-        for n in dict0.keys():
+        for n in dict0:
             if dict0[n] < dict1[n]:
                 win.append(n)
             elif dict0[n] > dict1[n]:
                 lose.append(n)
-        if lose == []:
+        if not lose and win:
+            iequal = False
             hbounded = True
-        else:
+        elif not lose and not win:
+            iequal = True
             hbounded = False
-        return {'win': win, 'lose': lose, 'hbounded': hbounded}
+        elif lose:
+            iequal = False
+            hbounded = False
+        return {'win': win, 'lose': lose, 'hbounded': hbounded, 'iequal': iequal}
 
     def __init_cdset(self, dset):
         """Create an (empty) comparative dictionary (or dataset).
@@ -208,6 +213,7 @@ class ComparativeInfo(object):
         self.win = dict0['win']
         self.lose = dict0['lose']
         self.hbounded = dict0['hbounded']
+        self.iequal = dict0['iequal']
 
 
 class FunctionalDataSet(ComparativeDataSet):
@@ -302,10 +308,12 @@ class PoOTDataSet(COTDataSet):
 
         """
         cotdset = super(PoOTDataSet, self).get_cotdset(fdset, lattice)
-        for cand0 in cotdset.keys():
-            for cand1 in cotdset[cand0].keys():
+        for cand0 in cotdset:
+            for cand1 in cotdset[cand0]:
                 pinfo = cotdset[cand0][cand1]
-                if pinfo.cots == set([]):
+                if pinfo.iequal:
+                    poots = lattice[frozenset([])]['up']
+                elif not pinfo.cots and not pinfo.iequal:
                     poots = pinfo.cots
                 else:
                     downsets = [lattice[frozenset(cot)]['down'] for cot in pinfo.cots]
