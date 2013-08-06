@@ -7,7 +7,6 @@ StrictOrders -- get the lattices for an iterable
 
 """
 import itertools
-import pickle
 
 class Powerset(object):
 
@@ -143,12 +142,4 @@ class StrictOrders(object):
                 if t in torders:
                     self.lattice[s]['max'].add(t)
         return self.lattice
-
-    def write_to_pickle(self, iterable):
-        """Write the lattice of orders of iterable to a pickle."""
-        l = list(iterable)
-        length = len(l)
-        with open('gspace_%scons.p' % length, 'wb') as f:
-            pickle.dump(self.get_orders(l), f)
-        return 'Orders written.'
 

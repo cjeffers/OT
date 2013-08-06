@@ -7,7 +7,6 @@ Lattice -- stores information and methods for implementing a lattice
 import cPickle
 import os
 import ordertheory
-#import pymongo
 
 
 class PartialOrderLattice(object):
