@@ -3,3 +3,4 @@ v0.2.0, 2013-08-05 -- Added lattice module, integration with MongoDB
 v0.2.1, 2013-08-06 -- Minor edge case bug fixes, added MIT license, authors
 v0.2.2, 2013-08-06 -- added iequality, more edge fixes
 v0.2.3, 2013-08-06 -- edge bugs. still.
+v0.2.4, 2013-08-08 -- tested out all edge bugs on poot.PoOT.get_grammars()

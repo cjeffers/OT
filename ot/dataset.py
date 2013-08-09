@@ -97,8 +97,8 @@ class Candidate(object):
     def vvec(self):
         return self._vvec
 
-    @out.setter
-    def out(self, value):
+    @vvec.setter
+    def vvec(self, value):
         self._vvec = value
 
     @property
@@ -149,15 +149,15 @@ class ComparativeDataSet(DataSet):
                 win.append(n)
             elif dict0[n] > dict1[n]:
                 lose.append(n)
-        if not lose and win:
-            iequal = False
+        if win and not lose:
             hbounded = True
-        elif not lose and not win:
-            iequal = True
-            hbounded = False
-        elif lose:
             iequal = False
+        elif not win and not lose:
             hbounded = False
+            iequal = True
+        else:
+            hbounded = False
+            iequal = False
         return {'win': win, 'lose': lose, 'hbounded': hbounded, 'iequal': iequal}
 
     def __init_cdset(self, dset):
@@ -177,13 +177,12 @@ class ComparativeDataSet(DataSet):
                 return self._cdset.update({x : {y :{}}})
 
         for x, y in itertools.product(dset, dset):
-            if x.opt == True:
-                if x.inp == y.inp:
-                    helper(x, y)
-            if x.opt == False:
-                if y.opt == True:
-                    if x.inp == y.inp:
-                        helper(x, y)
+            if x.inp == y.inp:
+                helper(x, y)
+            #if x.opt == False:
+                #if y.opt == True:
+                    #if x.inp == y.inp:
+                        #helper(x, y)
         return self._cdset
 
     def get_cdset(self, dset):
@@ -277,12 +276,14 @@ class COTDataSet(FunctionalDataSet):
             for cand1 in fdset[cand0].keys():
                 s = set([])
                 cotinfo = fdset[cand0][cand1]
-                if not cotinfo.iequal:
-                    if cotinfo.fspace:
-                        for f in cotinfo.fspace:
-                            cots = lattice[frozenset(f)]['max']
-                            s.update(cots)
-                cotinfo.info.update({'cots': s})
+                if cotinfo.iequal:
+                    cot_gspace = lattice[frozenset([])]['max']
+                    cotinfo.info.update({'cots': cot_gspace})
+                else:
+                    for f in cotinfo.fspace:
+                        cots = lattice[frozenset(f)]['max']
+                        s.update(cots)
+                    cotinfo.info.update({'cots': s})
                 fdset[cand0][cand1] = COTInfo(cotinfo.info)
         return fdset
 
@@ -310,16 +311,16 @@ class PoOTDataSet(COTDataSet):
         cotdset = super(PoOTDataSet, self).get_cotdset(fdset, lattice)
         for cand0 in cotdset:
             for cand1 in cotdset[cand0]:
-                pinfo = cotdset[cand0][cand1]
-                if pinfo.iequal:
+                pootinfo = cotdset[cand0][cand1]
+                if pootinfo.iequal:
                     poots = lattice[frozenset([])]['up']
-                elif not pinfo.cots and not pinfo.iequal:
-                    poots = pinfo.cots
+                elif not pootinfo.iequal and not pootinfo.cots:
+                    poots = pootinfo.cots
                 else:
-                    downsets = [lattice[frozenset(cot)]['down'] for cot in pinfo.cots]
-                    poots = set.union(*map(set, downsets))
-                pinfo.info.update({'poots': poots})
-                cotdset[cand0][cand1] = PoOTInfo(pinfo.info)
+                    downs = [lattice[frozenset(cot)]['down'] for cot in pootinfo.cots]
+                    poots = set.union(*map(set, downs))
+                pootinfo.info.update({'poots': poots})
+                cotdset[cand0][cand1] = PoOTInfo(pootinfo.info)
         return cotdset
 
 

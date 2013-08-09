@@ -82,8 +82,7 @@ class StrictTotalOrders(object):
 
         """
         l = list(iterable)
-        permutations = itertools.permutations(l)
-        for permutation in permutations:
+        for permutation in itertools.permutations(l):
             yield frozenset(self.__recurse(permutation))
 
 
@@ -98,10 +97,11 @@ class StrictOrders(object):
         such that for some z, (x,z) and (z,y) are in r but (x,y) is not.
 
         """
-        product = itertools.product(list(relation), list(relation))
+        relation = list(relation)
+        product = itertools.product(relation, relation)
         for x in product:
             if x[0][1] == x[1][0]:
-                if (x[0][0], x[1][1]) not in list(relation):
+                if (x[0][0], x[1][1]) not in relation:
                     return True
 
     def __orders(self, l):
@@ -115,7 +115,7 @@ class StrictOrders(object):
         for order in torders:
             pset = Powerset().powerset(list(order))
             for relation in pset:
-                if self.__is_not_transitive(relation) != True:
+                if not self.__is_not_transitive(relation):  # if transitive
                     yield frozenset(relation)
 
     def get_orders(self, iterable):
@@ -126,7 +126,8 @@ class StrictOrders(object):
         """
         l = list(iterable)
         torders = list(StrictTotalOrders().orders(l))
-        for s, t in itertools.product(self.__orders(l), self.__orders(l)):
+        all_orders = list(self.__orders(l))
+        for s, t in itertools.product(all_orders, all_orders):
             try:
                 self.lattice[s]
             except:

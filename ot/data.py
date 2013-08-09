@@ -28,19 +28,186 @@ hbounded = [
                 }
            ]
 
-all_zeros = [
+
+###########################################################################
+##  Edge Case Testers  ####  Edge Case Testers  ####  Edge Case Testers  ##
+###########################################################################
+
+c0y_c1y_iy_dy = [
+
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0},
-                    'optimal': True
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
                 }
 ]
 
-no_optimal = [
+c0y_c1y_in_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0},
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
+c0y_c1n_iy_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+c0n_c1y_iy_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
+c0y_c1n_in_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+c0n_c1y_in_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
+c0y_c1y_iy_dn = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
+c0y_c1n_iy_dn = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+c0n_c1y_iy_dn = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True,
+                }
+]
+
+
+############################################################################
+##  Error cases  ####  Error cases  ####  Error cases  ####  Error cases  ##
+############################################################################
+
+c0n_c1n_iy_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+c0n_c1n_in_dy = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                },
+
+                {   'input': 'i2',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+c0n_c1n_iy_dn = [
+
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
@@ -51,50 +218,38 @@ no_optimal = [
                 }
 ]
 
-all_optimal = [
+c0n_c1n_in_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0},
-                    'optimal': True,
-                },
-
-                {   'input': 'i1',
-                    'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
-                    'optimal': True,
-                }
-]
-
-iequal_true = [
-
-                {   'input': 'i1',
-                    'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
-                    'optimal': True,
-                },
-
-                {   'input': 'i1',
-                    'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
-                    'optimal': True,
-                }
-]
-
-iequal_opposite = [
-
-                {   'input': 'i1',
-                    'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
                     'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+single_opt_cand =[
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
+
+single_non_opt_cand =[
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'optimal': False,
+                }
+]
+
+############################################################################
 
 voweldset = [
                 {   'input': 'ovea',

@@ -31,7 +31,7 @@ from lattice import PartialOrderLattice as POLattice
 class PoOT(object):
 
     def __init__(self, lat_dir, mongo_db=None):
-        self._dset    = []
+        self._dset = []
         self._lattice = {}
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
@@ -79,8 +79,8 @@ class PoOT(object):
         PoOT = dataset.PoOTDataSet()
         PoOT.dset = self.dset
         PoOT.cdset = PoOT.dset
-        for cand0 in PoOT.cdset.keys():
-            for cand1 in PoOT.cdset[cand0].keys():
+        for cand0 in PoOT.cdset:
+            for cand1 in PoOT.cdset[cand0]:
                 if PoOT.cdset[cand0][cand1].hbounded:
                     l.append((cand0.cand, cand1.cand))
         return l
@@ -135,7 +135,7 @@ class PoOT(object):
     def get_entailments(self, atomic=True):
         """Get candidate entailments.
 
-        If 'atomic = True', get atomic entailments.  Else, get
+        If atomic is True, get atomic entailments.  Else, get
         entailments between sets of candidates.
 
         """
@@ -149,16 +149,31 @@ class PoOT(object):
 class Grammars(object):
 
     def opt_grams(self, candinfo, classical=True):
-        l = []
-        for cand0 in candinfo.keys():
-            if classical and not candinfo[cand0].iequal:
-                l.append(candinfo[cand0].cots)
-            else:
-                l.append(candinfo[cand0].poots)
+        """Get the grammars that make a candidate optimal.
+
+        Return the intersection of the grammars that make the candidate
+        more harmonic than each of the candidates it is compared to.  If
+        classical is False, return the PoOT grammars that do so,
+        otherwise return the COT grammars.
+
+        """
+        if classical:
+            l = [candinfo[cand0].cots for cand0 in candinfo]
+        else:
+            l = [candinfo[cand0].poots for cand0 in candinfo]
         return set.intersection(*map(set, l))
 
     def get_grammars(self, dset, classical=True):
-        """Get grammars compatible with dataset."""
+        """Get grammars compatible with dataset.
+
+        Collect the optimal grammars for each comparison into two
+        sets of grammars: pos represents the intersection of all the
+        grammars that make the optimal candidates win, and neg
+        represents the union of all the grammars that make the non-
+        optimal candidates win. The set of grammars compatible with
+        the entire dataset is pos - neg.
+
+        """
         pos_grammars = []
         for cand in dset:
             if cand.opt:
@@ -189,10 +204,16 @@ class Entailments(object):
 
         """
         grams = Grammars()
-        return [(cand, grams.opt_grams(dset[cand])) for cand in dset.keys()]
+        return [(cand, grams.opt_grams(dset[cand], False)) for cand in dset]
 
     def get_entails(self, dset, atomic=True):
-        """Get entailments between (sets of) candidates."""
+        """Get entailments between (sets of) candidates.
+
+        If the optimal grammars for a candidate cand0 are a subset of
+        the optimal grammars for a candidate cand1, then cand0 entails
+        cand1.
+
+        """
         lattice = {}
         mapping = self.__mapping(dset)
         if atomic:
@@ -201,7 +222,7 @@ class Entailments(object):
             pset = list(Powerset().powerset(mapping))
             prod = itertools.product(pset, pset)
         for x, y in prod:
-            if x != () and y != ():
+            if x and y:
                 if atomic:
                     s = frozenset([x[0].cand])
                     t = frozenset([y[0].cand])

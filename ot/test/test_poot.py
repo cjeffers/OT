@@ -13,6 +13,7 @@ class TestPoOT(object):
         with open('../lattices/gspace_4cons.p', 'rb') as f:
             self.lattice = cPickle.load(f)
 
+
     def test_lattice_setter(self):
         """PoOT lattice setter work?"""
         self.p.lattice = data.voweldset
@@ -206,26 +207,71 @@ class TestPoOT(object):
         }
         assert self.p.get_entailments() == ents
 
-    def check_dset_edge_case(self, dset, grammars):
-        """Handles edge cases?"""
+    def check_edge_case(self, dset, grammars, classical):
         self.p.dset = getattr(data, dset)
-        assert self.p.get_grammars(False) == grammars
+        assert self.p.get_grammars(classical) == grammars
 
-    def test_dset_edge_cases(self):
+    def get_all_or_none_edge_cases(self, classical):
+        if classical:
+            gspace = self.lattice[frozenset([])]['max']
+        else:
+            gspace = self.lattice[frozenset([])]['up']
+        return {
+            'c0y_c1y_iy_dy': gspace,
+            'c0y_c1y_in_dy': gspace,
+            'c0y_c1n_iy_dy': set([]),
+            'c0n_c1y_iy_dy': set([]),
+            'c0y_c1n_in_dy': set([]),
+            'c0n_c1y_in_dy': set([]),
+            'c0y_c1y_iy_dn': gspace,
+            'c0y_c1n_iy_dn': set([]),
+            'c0n_c1y_iy_dn': set([])
+        }
+
+    def test_poot_edge_cases(self):
         self.setUp()
-        gspace = self.lattice[frozenset([])]['up']
-        tests = {'all_optimal': set([]), 'all_zeros': gspace,
-                 'iequal_true': gspace, 'iequal_opposite': set([])}
-        for k, v in tests.iteritems():
-            yield self.check_dset_edge_case, k, v
+        for k, v in self.get_all_or_none_edge_cases(False).iteritems():
+            yield self.check_edge_case, k, v, False
+
+    def test_cot_edge_cases(self):
+        self.setUp()
+        for k, v in self.get_all_or_none_edge_cases(True).iteritems():
+            yield self.check_edge_case, k, v, True
 
     @raises(ValueError)
-    def test_no_optimal_candidates(self):
-        """Raises ValueError on no optimal candidates?"""
-        self.p.dset = data.no_optimal
-        self.get_grammars(False)
+    def check_error_cases(self, dset, classical):
+        self.p.dset = getattr(data, dset)
+        self.p.get_grammars(classical)
 
+    def test_error_cases(self):
+        dsets = ['c0n_c1n_in_dn', 'c0n_c1n_in_dy',
+                 'c0n_c1n_iy_dn', 'c0n_c1n_iy_dy']
+        types = [True, False]
+        cases = [(d, t) for d in dsets for t in types]
+        for c in cases:
+            yield self.check_error_cases, c[0], c[1]
 
+    def check_single_opt_cand(self, gspace, classical):
+        self.p.dset = data.single_opt_cand
+        assert self.p.get_grammars(classical) == gspace
+
+    def test_single_optimal_candidates(self):
+        self.setUp()
+        for b in (True, False):
+            if b:
+                gspace = self.lattice[frozenset([])]['max']
+            else:
+                gspace = self.lattice[frozenset([])]['up']
+            yield self.check_single_opt_cand, gspace, b
+
+    @raises(ValueError)
+    def check_single_non_opt_cand(self, classical):
+        self.p.dset = data.single_non_opt_cand
+        self.p.get_grammars(classical)
+
+    def test_single_non_opt_cand(self):
+        for b in (True, False):
+            yield self.check_single_non_opt_cand, b
 
 
 
