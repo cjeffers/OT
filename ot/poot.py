@@ -35,6 +35,20 @@ class PoOT(object):
         self._lattice = {}
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
+        self._grammardset = None
+
+    def _ensure_grammardset(fun, *args, **kwargs):
+        """Make sure a grammar dset exists, generates it if not."""
+        def wrapper(self, *args, **kwargs):
+            if self._grammardset is None:
+                gdset = dataset.GrammarDataSet()
+                gdset.dset = self.dset
+                gdset.cdset = gdset.dset
+                gdset.fdset = gdset.cdset
+                self._grammardset = gdset.get_grammardset(gdset.fdset,
+                                                          self.lattice)
+            return fun(self, *args, **kwargs)
+        return wrapper
 
     @property
     def dset(self):
@@ -59,40 +73,33 @@ class PoOT(object):
         cons = len(value[0]['vvector'])
         self._lattice = POLattice(cons, self._lat_dir, self._mongo_db)
 
+    @_ensure_grammardset
     def get_optimal_candidates(self):
         """Get all optimal candidates."""
-        PoOT = dataset.PoOTDataSet()
-        PoOT.dset = self.dset
-        opt = [cand.cand for cand in PoOT.dset if cand.opt]
+        opt = [cand.cand for cand in self._grammardset if cand.opt]
         return opt
 
+    @_ensure_grammardset
     def get_nonoptimal_candidates(self):
         """Get all non-optimal candidates."""
-        PoOT = dataset.PoOTDataSet()
-        PoOT.dset = self.dset
-        nonopt = [cand.cand for cand in PoOT.dset if not cand.opt]
+        nonopt = [cand.cand for cand in self._grammardset if not cand.opt]
         return nonopt
 
+    @_ensure_grammardset
     def get_harmonically_bounded_candidates(self):
         """Get all harmonically bound candidate pairs"""
         l = []
-        PoOT = dataset.PoOTDataSet()
-        PoOT.dset = self.dset
-        PoOT.cdset = PoOT.dset
-        for cand0 in PoOT.cdset:
-            for cand1 in PoOT.cdset[cand0]:
-                if PoOT.cdset[cand0][cand1].hbounded:
+        for cand0 in self._grammardset:
+            cand_keys = (k for k in self._grammardset[cand0] if type(k) is not str)
+            for cand1 in cand_keys:
+                if self._grammardset[cand0][cand1].hbounded:
                     l.append((cand0.cand, cand1.cand))
         return l
 
+    @_ensure_grammardset
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
-        PoOT = dataset.PoOTDataSet()
-        PoOT.dset = self.dset
-        PoOT.cdset = PoOT.dset
-        PoOT.fdset = PoOT.cdset
-        pootdset = PoOT.get_pootdset(PoOT.fdset, self.lattice)
-        return Grammars().get_grammars(pootdset, classical)
+        return Grammars().get_grammars(self._grammardset, classical)
 
     def is_compatible_COT_grammar(self, grammar):
         """Check whether COT grammar is compatible with the dataset."""
@@ -132,6 +139,7 @@ class PoOT(object):
                 s.add(grammar)
         return s
 
+    @_ensure_grammardset
     def get_entailments(self, atomic=True):
         """Get candidate entailments.
 
@@ -139,29 +147,17 @@ class PoOT(object):
         entailments between sets of candidates.
 
         """
-        PoOT = dataset.PoOTDataSet()
-        PoOT.edset = self.dset
-        PoOT.fdset = PoOT.edset
-        pootdset = PoOT.get_pootdset(PoOT.fdset, self.lattice)
-        return Entailments().get_entails(pootdset, atomic)
+        return Entailments().get_entails(self._grammardset, atomic)
+
 
 
 class Grammars(object):
 
     def opt_grams(self, candinfo, classical=True):
-        """Get the grammars that make a candidate optimal.
-
-        Return the intersection of the grammars that make the candidate
-        more harmonic than each of the candidates it is compared to.  If
-        classical is False, return the PoOT grammars that do so,
-        otherwise return the COT grammars.
-
-        """
         if classical:
-            l = [candinfo[cand0].cots for cand0 in candinfo]
+            return candinfo['opt_cots']
         else:
-            l = [candinfo[cand0].poots for cand0 in candinfo]
-        return set.intersection(*map(set, l))
+            return candinfo['opt_poots']
 
     def get_grammars(self, dset, classical=True):
         """Get grammars compatible with dataset.
@@ -204,7 +200,7 @@ class Entailments(object):
 
         """
         grams = Grammars()
-        return [(cand, grams.opt_grams(dset[cand], False)) for cand in dset]
+        return [(cand, grams.opt_grams(dset[cand])) for cand in dset]
 
     def get_entails(self, dset, atomic=True):
         """Get entailments between (sets of) candidates.

@@ -30,16 +30,16 @@ class TestPoOT(object):
     def test_get_optimal_candidates(self):
         """Gets all and only the optimal candidates?"""
         self.p.dset = data.voweldset
-        opt_cands = [('ovea', 'o.ve.a'), ('ovea', 'o.vee'), ('idea', 'i.de.a'),
+        opt_cands =set([('ovea', 'o.ve.a'), ('ovea', 'o.vee'), ('idea', 'i.de.a'),
                      ('lasi-a', 'la.si.a'), ('lasi-a', 'la.sii'),
-                     ('rasia', 'ra.si.a')]
-        assert self.p.get_optimal_candidates() == opt_cands
+                     ('rasia', 'ra.si.a')])
+        assert set(self.p.get_optimal_candidates()) == opt_cands
 
     def test_get_nonoptimal_candidates(self):
         """Gets all and only nonoptimal candidates?"""
         self.p.dset = data.voweldset
-        non_opt_cands = [('idea', 'i.dee'), ('rasia', 'ra.sii')]
-        assert self.p.get_nonoptimal_candidates() == non_opt_cands
+        non_opt_cands = set([('idea', 'i.dee'), ('rasia', 'ra.sii')])
+        assert set(self.p.get_nonoptimal_candidates()) == non_opt_cands
 
     def test_get_hbounded_candidates(self):
         """Gets all and only the harmonically bounded candidates?"""

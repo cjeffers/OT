@@ -114,7 +114,6 @@ class PoOTDataSetTests(unittest.TestCase):
         pds.fdset = pds.cdset
         with open('../lattices/gspace_4cons.p', 'rb') as f:
             self.lattice = cPickle.load(f)
-        pds.get_cotdset(pds.fdset, self.lattice)
         self.pds = pds
 
     def test_poot_dset(self):
@@ -129,6 +128,23 @@ class PoOTDataSetTests(unittest.TestCase):
                         self.assertTrue(p in info.poots, msg)
 
 
+class GrammarDataSetTests(unittest.TestCase):
+    def setUp(self):
+        gds = dataset.GrammarDataSet()
+        gds.dset = data.voweldset
+        gds.cdset = gds.dset
+        gds.fdset = gds.cdset
+        with open('../lattices/gspace_4cons.p', 'rb') as f:
+            self.lattice = cPickle.load(f)
+        self.grams = gds.get_grammardset(gds.fdset, self.lattice)
+        self.gds = gds
 
+    def test_grammar_dset_cots(self):
+        for cand0 in self.grams:
+            for cot in self.grams[cand0]['opt_cots']:
+                self.assertTrue(cot in self.lattice[frozenset([])]['max'])
 
-
+    def test_grammar_dset_poots(self):
+        for cand0 in self.grams:
+            for poot in self.grams[cand0]['opt_poots']:
+                self.assertTrue(poot in self.lattice[frozenset([])]['up'])

@@ -308,7 +308,7 @@ class PoOTDataSet(COTDataSet):
         requirements of the candidate pair.
 
         """
-        cotdset = super(PoOTDataSet, self).get_cotdset(fdset, lattice)
+        cotdset = self.get_cotdset(fdset, lattice)
         for cand0 in cotdset:
             for cand1 in cotdset[cand0]:
                 pootinfo = cotdset[cand0][cand1]
@@ -329,4 +329,37 @@ class PoOTInfo(COTInfo):
     def __init__(self, dict0):
         COTInfo.__init__(self, dict0)
         self.poots = dict0['poots']
+
+
+class GrammarDataSet(PoOTDataSet):
+    """Store the optimal grammars for each candidate in the dataset"""
+
+    def get_grammardset(self, fdset, lattice):
+        pootdset = self.get_pootdset(fdset, lattice)
+        for cand in pootdset:
+            opt_cots = self._opt_grams(pootdset[cand])
+            opt_poots = self._opt_grams(pootdset[cand], classical=False)
+            pootdset[cand].update({'opt_cots': opt_cots,
+                                   'opt_poots': opt_poots})
+        return pootdset
+
+    def _opt_grams(self, candinfo, classical=True):
+        """Get the grammars that make a candidate optimal.
+
+        Return the intersection of the grammars that make the candidate
+        more harmonic than each of the candidates it is compared to.  If
+        classical is False, return the PoOT grammars that do so,
+        otherwise return the COT grammars.
+
+        """
+        cand_keys = (k for k in candinfo if type(k) is not str)
+        if classical:
+            l = [candinfo[cand0].cots for cand0 in cand_keys]
+        else:
+            l = [candinfo[cand0].poots for cand0 in cand_keys]
+        return set.intersection(*map(set, l))
+
+
+
+
 
