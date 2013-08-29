@@ -274,4 +274,39 @@ class TestPoOT(object):
             yield self.check_single_non_opt_cand, b
 
 
+class TestStats(object):
+
+    def setUp(self):
+        lat_dir = '../lattices'
+        ots1 = poot.OTStats(lat_dir)
+        ots1.dset = data.voweldset
+        ots2 = poot.OTStats(lat_dir)
+        ots2.dset = data.three_const
+
+        self.ots1 = ots1
+        self.ots2 = ots2
+
+    def test_num_poots(self):
+        assert(self.ots1.num_compatible_poots() == 11)
+        assert(self.ots2.num_compatible_poots() == 19)
+        assert(self.ots1.num_total_poots() == 219)
+        assert(self.ots2.num_total_poots() == 19)
+
+    def test_num_cots(self):
+        assert(self.ots1.num_compatible_cots() == 0)
+        assert(self.ots2.num_compatible_cots() == 6)
+        assert(self.ots1.num_total_cots() == 24)
+        assert(self.ots2.num_total_cots() == 6)
+
+    def test_num_cots_by_cand(self):
+        num_by_cand = self.ots1.num_cots_by_cand()
+        assert(num_by_cand[('ovea', 'o.ve.a')] == 8)
+        assert(num_by_cand[('ovea', 'o.vee')] == 16)
+        assert(num_by_cand[('rasia', 'ra.sii')] == 8)
+        assert(num_by_cand[('lasi-a', 'la.si.a')] == 12)
+        assert(num_by_cand[('idea', 'i.de.a')] == 12)
+        assert(num_by_cand[('idea', 'i.dee')] == 12)
+        assert(num_by_cand[('rasia', 'ra.si.a')] == 16)
+        assert(num_by_cand[('lasi-a', 'la.sii')] == 12)
+
 

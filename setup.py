@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='ot',
-    version='0.2.4',
+    version='0.3.0',
     author='Alex Djalali',
     author_email='alex.djalali@gmail.com',
     packages=['ot', 'ot.test'],

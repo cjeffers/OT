@@ -179,10 +179,6 @@ class ComparativeDataSet(DataSet):
         for x, y in itertools.product(dset, dset):
             if x.inp == y.inp:
                 helper(x, y)
-            #if x.opt == False:
-                #if y.opt == True:
-                    #if x.inp == y.inp:
-                        #helper(x, y)
         return self._cdset
 
     def get_cdset(self, dset):

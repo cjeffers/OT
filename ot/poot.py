@@ -27,6 +27,18 @@ import dataset
 from ordertheory import Powerset
 from lattice import PartialOrderLattice as POLattice
 
+def _ensure_grammardset(fun, *args, **kwargs):
+    """Wrap a function to make sure the GrammarDataSet exists."""
+    def wrapper(self, *args, **kwargs):
+        if self._grammardset is None:
+            gdset = dataset.GrammarDataSet()
+            gdset.dset = self.dset
+            gdset.cdset = gdset.dset
+            gdset.fdset = gdset.cdset
+            self._grammardset = gdset.get_grammardset(gdset.fdset,
+                                                        self.lattice)
+        return fun(self, *args, **kwargs)
+    return wrapper
 
 class PoOT(object):
 
@@ -37,18 +49,6 @@ class PoOT(object):
         self._mongo_db = mongo_db
         self._grammardset = None
 
-    def _ensure_grammardset(fun, *args, **kwargs):
-        """Make sure a grammar dset exists, generates it if not."""
-        def wrapper(self, *args, **kwargs):
-            if self._grammardset is None:
-                gdset = dataset.GrammarDataSet()
-                gdset.dset = self.dset
-                gdset.cdset = gdset.dset
-                gdset.fdset = gdset.cdset
-                self._grammardset = gdset.get_grammardset(gdset.fdset,
-                                                          self.lattice)
-            return fun(self, *args, **kwargs)
-        return wrapper
 
     @property
     def dset(self):
@@ -67,6 +67,10 @@ class PoOT(object):
     @property
     def lattice(self):
         return self._lattice
+
+    @property
+    def num_constraints(self):
+        return len(self.dset[0]['vvector'])
 
     @lattice.setter
     def lattice(self, value):
@@ -240,6 +244,55 @@ class Entailments(object):
                 elif u.issubset(v):
                     lattice[s]['up'].add(t)
         return lattice
+
+
+class OTStats(PoOT):
+    """Exports basic statistics for a PoOT dataset.
+
+    num_compatible_poots, num_compatible_cots -- get the number of
+        compatible PoOT and COT grammars
+    num_total_poots, num_compatible_cots -- get the total possible
+        number of PoOT and COT grammars for the number of constraints
+    num_cots_by_cand -- get a dictionary from input-output pairs to
+        the number of cots that make that pair optimal
+    """
+
+    const_info = {
+        2: {'total_poots': 3, 'total_cots': 2, 'cot_len': 1},
+        3: {'total_poots': 19, 'total_cots': 6, 'cot_len': 3},
+        4: {'total_poots': 219, 'total_cots': 24, 'cot_len': 6},
+        5: {'total_poots': 4231, 'total_cots': 120, 'cot_len': 10},
+        6: {'total_poots': 130023, 'total_cots': 720, 'cot_len': 15}
+    }
+
+    def num_compatible_poots(self):
+        """Get the number of compatible PoOT grammars"""
+        return len(self.get_grammars(False))
+
+    def num_compatible_cots(self):
+        """Get the number of compatible COT grammars"""
+        return len(self.get_grammars(True))
+
+    def num_total_poots(self):
+        """Get the number of possible PoOT grammars"""
+        return self.const_info[self.num_constraints]['total_poots']
+
+    def num_total_cots(self):
+        """Get the number of possible COT grammars"""
+        return self.const_info[self.num_constraints]['total_cots']
+
+    @_ensure_grammardset
+    def num_cots_by_cand(self):
+        """Get the number of COTs that make each candidate optimal.
+
+        Return a dictionary from input-output pairs to the number of
+        cots that make that pair optimal
+
+        """
+        gds = self._grammardset
+        return dict((cand.cand, len(gds[cand]['opt_cots'])) for cand in gds)
+
+
 
 
 

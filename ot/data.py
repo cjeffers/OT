@@ -29,6 +29,20 @@ hbounded = [
            ]
 
 
+three_const = [
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:0, 3:0},
+                    'optimal': True,
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1},
+                    'optimal': False,
+                }
+           ]
+
 ###########################################################################
 ##  Edge Case Testers  ####  Edge Case Testers  ####  Edge Case Testers  ##
 ###########################################################################
