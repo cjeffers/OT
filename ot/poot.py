@@ -40,6 +40,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
         return fun(self, *args, **kwargs)
     return wrapper
 
+
 class PoOT(object):
 
     def __init__(self, lat_dir, mongo_db=None):
@@ -269,28 +270,34 @@ class OTStats(PoOT):
         """Get the number of compatible PoOT grammars"""
         return len(self.get_grammars(False))
 
-    def num_compatible_cots(self):
+    def num_compatible_cots(self, grammar=frozenset([])):
         """Get the number of compatible COT grammars"""
-        return len(self.get_grammars(True))
+        grammars = self.get_grammars(True)
+        return len([g for g in grammars if g.issuperset(grammar)])
 
     def num_total_poots(self):
         """Get the number of possible PoOT grammars"""
         return self.const_info[self.num_constraints]['total_poots']
 
-    def num_total_cots(self):
+    def num_total_cots(self, grammar=frozenset([])):
         """Get the number of possible COT grammars"""
-        return self.const_info[self.num_constraints]['total_cots']
+        cots = self.lattice[frozenset([])]['max']
+        return len([cot for cot in cots if cot.issuperset(grammar)])
 
     @_ensure_grammardset
-    def num_cots_by_cand(self):
+    def num_cots_by_cand(self, grammar=frozenset([])):
         """Get the number of COTs that make each candidate optimal.
 
         Return a dictionary from input-output pairs to the number of
         cots that make that pair optimal
 
         """
-        gds = self._grammardset
-        return dict((cand.cand, len(gds[cand]['opt_cots'])) for cand in gds)
+        ret = {}
+        for cand in self._grammardset:
+            opt_cots = self._grammardset[cand]['opt_cots']
+            num_cots = len([cot for cot in opt_cots if cot.issuperset(grammar)])
+            ret[cand.cand] = num_cots
+        return ret
 
 
 

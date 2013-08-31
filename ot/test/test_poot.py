@@ -309,4 +309,23 @@ class TestStats(object):
         assert(num_by_cand[('rasia', 'ra.si.a')] == 16)
         assert(num_by_cand[('lasi-a', 'la.sii')] == 12)
 
+    def test_num_cots_by_cand_by_grammar(self):
+        grams = sorted(list(self.ots1.get_grammars(False)))
+        guess = [self.ots1.num_cots_by_cand(gram) for gram in grams]
+        check = [
+            {('rasia', 'ra.si.a'): 8, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 5, ('idea', 'i.de.a'): 8, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 3, ('ovea', 'o.ve.a'): 4, ('ovea', 'o.vee'): 4},
+            {('rasia', 'ra.si.a'): 6, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 5, ('idea', 'i.de.a'): 6, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 5, ('ovea', 'o.vee'): 1},
+            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 1},
+            {('rasia', 'ra.si.a'): 4, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 3, ('idea', 'i.de.a'): 4, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 2},
+            {('rasia', 'ra.si.a'): 5, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 4, ('idea', 'i.de.a'): 5, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 4, ('ovea', 'o.vee'): 1},
+            {('rasia', 'ra.si.a'): 6, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 3, ('idea', 'i.de.a'): 6, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 3, ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 4},
+            {('rasia', 'ra.si.a'): 4, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 4, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 2, ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 2},
+            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 1, ('idea', 'i.de.a'): 3, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 2, ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 2},
+            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 1},
+            {('rasia', 'ra.si.a'): 2, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 1, ('idea', 'i.de.a'): 2, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 1},
+            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0, ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3, ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1, ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 2}
+        ]
+        for g, c in zip(guess, check):
+            assert(g == c)
+
 
