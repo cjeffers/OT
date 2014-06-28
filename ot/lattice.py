@@ -84,7 +84,8 @@ class PartialOrderLattice(object):
 
         """
         if not self._lattice:
-            lat = ordertheory.StrictOrders().get_orders(xrange(1, self.set_n+1))
+            lat = ordertheory.StrictOrders().get_orders(xrange(1,
+                                                               self.set_n+1))
             self._lattice = lat
 
     def __read_from_pickle(self, size, dirname):
@@ -99,9 +100,6 @@ class PartialOrderLattice(object):
             if not self._lattice:
                 raise TypeError('Lattice must be initialized from a pickle '
                                 'or generated.')
-            elif self._mongo_db:
-                raise TypeError('Lattice initialized from MongoDB cannot be '
-                                'written.')
             else:
                 return fun(self, *args, **kwargs)
         return wrapper
@@ -112,7 +110,7 @@ class PartialOrderLattice(object):
 
         Only supports lattices that have been explicitly generated or
         loaded from a file themselves.  Attempting to write a lattice
-        that has been initialized from a pymongo.Database instance will
+        that has been initialized from a pymongo.  Database instance will
         result in a TypeError.  Writing from a lattice that has not been
         initialized will also result in a TypeError.
 
@@ -131,7 +129,7 @@ class PartialOrderLattice(object):
         will be stored in 'db.lat4'.  Any previous collection with that
         name will be dropped, so be sure you are ok with that.  This
         function, like write_to_pickle, only supports lattices that have
-        either been loaded from a file or generated explicitly.  Wrtiing
+        either been loaded from a file or generated explicitly.  Writing
         from a MongoDB-backed lattice will throw a TypeError.
 
         """
@@ -141,12 +139,3 @@ class PartialOrderLattice(object):
         for k, v in self._lattice.iteritems():
             doc = {'set': str(sorted(k)), 'value': str(v)}
             mongo_col.insert(doc)
-
-
-
-
-
-
-
-
-

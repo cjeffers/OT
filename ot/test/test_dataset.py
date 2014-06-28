@@ -4,6 +4,7 @@ from .. import dataset
 from .. import data
 import cPickle
 
+
 class DataSetTests(unittest.TestCase):
 
     def setUp(self):
@@ -16,13 +17,27 @@ class DataSetTests(unittest.TestCase):
         self.assertEqual(self.ds.edset, [])
 
     def test_dset_getter_setter(self):
-        """DataSet.dset property, also candidate getting/setting"""
+        """DataSet.dset property, also candidate getting"""
         self.ds.dset = self.vowel_set
         for c, d in zip(self.ds.dset, self.vowel_set):
             self.assertEqual(c.inp, d['input'], "inputs don't match")
             self.assertEqual(c.out, d['output'], "outputs don't match")
             self.assertEqual(c.opt, d['optimal'], "optimality doesn't match")
-            self.assertEqual(c.vvec, d['vvector'], "violation vectors don't match")
+            self.assertEqual(c.vvec, d['vvector'],
+                             "violation vectors don't match")
+
+    def test_candidate_setter(self):
+        """Candidate setting"""
+        cand = dataset.Candidate(self.vowel_set[0])
+        inp = 'poop'
+        out = 'dumb'
+        vvec = {1: "hello", 2: "goodbye"}
+        cand.inp = inp
+        cand.out = out
+        cand.vvec = vvec
+        self.assertEqual(inp, cand.inp, "input not set correctly")
+        self.assertEqual(out, cand.out, "output not set correctly")
+        self.assertEqual(vvec, cand.vvec, "vvec not set correctly")
 
     def test_edset_getter_setter(self):
         """Entailment dset property, also candidate getting/setting"""
@@ -30,7 +45,8 @@ class DataSetTests(unittest.TestCase):
         for c, d in zip(self.ds.edset, self.vowel_set):
             self.assertEqual(c.inp, d['input'], "inputs don't match")
             self.assertEqual(c.out, d['output'], "outputs don't match")
-            self.assertEqual(c.vvec, d['vvector'], "violation vectors don't match")
+            self.assertEqual(c.vvec, d['vvector'],
+                             "violation vectors don't match")
             self.assertTrue(c.opt, "non-optimal entailment candidate")
 
 
@@ -78,7 +94,8 @@ class FunctionalDataSetTests(unittest.TestCase):
                 fspace = finfo.fspace
                 fs = ordertheory.FunctionalSpace()
                 r_fspace = fs.funcs(finfo.lose, finfo.win)
-                self.assertEqual(fspace, r_fspace, "The functional spaces didn't match")
+                self.assertEqual(fspace, r_fspace,
+                                 "The functional spaces didn't match")
 
 
 class COTDataSetTests(unittest.TestCase):
@@ -101,7 +118,8 @@ class COTDataSetTests(unittest.TestCase):
                 for f in info.fspace:
                     maxset = lattice[frozenset(f)]['max']
                     for s in maxset:
-                        msg = "%s in %s's maxset isn't in COT" % (str(s), str(f))
+                        msg = "%s in %s's maxset isn't in COT" % (str(s),
+                                                                  str(f))
                         self.assertTrue(s in info.cots, msg)
 
 
@@ -124,7 +142,8 @@ class PoOTDataSetTests(unittest.TestCase):
                 info = poots[cand0][cand1]
                 for c in info.cots:
                     for p in self.lattice[c]['down']:
-                        msg = "%s in %s's downset not in PoOT" % (str(p), str(c))
+                        msg = "%s in %s's downset not in PoOT" % (str(p),
+                                                                  str(c))
                         self.assertTrue(p in info.poots, msg)
 
 

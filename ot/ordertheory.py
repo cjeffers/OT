@@ -8,6 +8,7 @@ StrictOrders -- get the lattices for an iterable
 """
 import itertools
 
+
 class Powerset(object):
 
     def powerset(self, iterable):
@@ -18,7 +19,9 @@ class Powerset(object):
 
         """
         l = list(iterable)
-        return itertools.chain.from_iterable(itertools.combinations(l, r) for r in range(len(l)+1))
+        return itertools.chain.from_iterable(
+            itertools.combinations(l, r) for r in range(len(l)+1)
+        )
 
 
 class FunctionalSpace(object):
@@ -47,9 +50,9 @@ class FunctionalSpace(object):
         codom = list(list1)
         if not codom:
             return []
-        elif codom and not dom:
+        elif not dom:
             return [[]]
-        elif dom and codom:
+        else:
             rel = self.__rel(dom, codom)
             # tupleize and uniq the dicts in rel
             functions = set([tuple(item.items()) for item in rel])
@@ -131,7 +134,9 @@ class StrictOrders(object):
             try:
                 self.lattice[s]
             except:
-                self.lattice.update({s:{'max':set([]), 'up':set([]), 'down':set([])}})
+                self.lattice.update({s: {'max': set([]),
+                                         'up': set([]),
+                                         'down': set([])}})
             if s.issuperset(t):
                 self.lattice[s]['down'].add(t)
                 if s.issubset(t):
@@ -143,4 +148,3 @@ class StrictOrders(object):
                 if t in torders:
                     self.lattice[s]['max'].add(t)
         return self.lattice
-

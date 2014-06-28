@@ -14,6 +14,20 @@ sample0 = [
 
         ]
 
+no_rankings = [
+                {   'input': 'i1',
+                    'output': 'o1',
+                    'vvector': {1:0, 2:0, 3:0, 4:0},
+                    'optimal': False
+                },
+
+                {   'input': 'i1',
+                    'output': 'o2',
+                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'optimal': True
+                }
+           ]
+
 hbounded = [
                 {   'input': 'i1',
                     'output': 'o1',

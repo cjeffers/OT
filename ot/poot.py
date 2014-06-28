@@ -27,6 +27,7 @@ import dataset
 from ordertheory import Powerset
 from lattice import PartialOrderLattice as POLattice
 
+
 def _ensure_grammardset(fun, *args, **kwargs):
     """Wrap a function to make sure the GrammarDataSet exists."""
     def wrapper(self, *args, **kwargs):
@@ -36,7 +37,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
             gdset.cdset = gdset.dset
             gdset.fdset = gdset.cdset
             self._grammardset = gdset.get_grammardset(gdset.fdset,
-                                                        self.lattice)
+                                                      self.lattice)
         return fun(self, *args, **kwargs)
     return wrapper
 
@@ -50,19 +51,18 @@ class PoOT(object):
         self._mongo_db = mongo_db
         self._grammardset = None
 
-
     @property
     def dset(self):
         return self._dset
 
     @dset.setter
     def dset(self, value):
+        if type(value) is tuple:
+            value = value[0]
         opts = [value[i]['optimal'] for i, cand in enumerate(value)]
         if not any(opts):
             raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
-        if type(value) is tuple:
-            value = value[0]
         self._dset = self._dset + value
 
     @property
@@ -95,7 +95,8 @@ class PoOT(object):
         """Get all harmonically bound candidate pairs"""
         l = []
         for cand0 in self._grammardset:
-            cand_keys = (k for k in self._grammardset[cand0] if type(k) is not str)
+            cand_keys = (k for k in self._grammardset[cand0] if
+                         type(k) is not str)
             for cand1 in cand_keys:
                 if self._grammardset[cand0][cand1].hbounded:
                     l.append((cand0.cand, cand1.cand))
@@ -155,7 +156,6 @@ class PoOT(object):
         return Entailments().get_entails(self._grammardset, atomic)
 
 
-
 class Grammars(object):
 
     def opt_grams(self, candinfo, classical=True):
@@ -179,19 +179,19 @@ class Grammars(object):
         for cand in dset:
             if cand.opt:
                 pos_grammars.append(self.opt_grams(dset[cand], classical))
-        try:
-            pos = set.intersection(*map(set, pos_grammars))
-        except TypeError:  # case when pos_grammars is empty
-            pos = set([])
+
+        pos = set.intersection(*map(set, pos_grammars))
 
         neg_grammars = []
         for cand in dset:
             if not cand.opt:
                 neg_grammars.append(self.opt_grams(dset[cand], classical))
-        try:
-            neg = set.union(*map(set, neg_grammars))
-        except TypeError:  # case when neg_grammars is empty
-            neg = set([])
+
+        if not neg_grammars:
+            neg_grammars = [[]]
+
+        neg = set.union(*map(set, neg_grammars))
+
         return pos.difference(neg)
 
 
@@ -237,7 +237,7 @@ class Entailments(object):
                 try:
                     lattice[s]
                 except KeyError:
-                    lattice.update({s:{'up':set([]), 'down':set([])}})
+                    lattice.update({s: {'up': set([]), 'down': set([])}})
                 if u.issuperset(v):
                     lattice[s]['down'].add(t)
                     if u.issubset(v):
@@ -295,15 +295,7 @@ class OTStats(PoOT):
         ret = {}
         for cand in self._grammardset:
             opt_cots = self._grammardset[cand]['opt_cots']
-            num_cots = len([cot for cot in opt_cots if cot.issuperset(grammar)])
+            num_cots = len([cot for cot in opt_cots if
+                            cot.issuperset(grammar)])
             ret[cand.cand] = num_cots
         return ret
-
-
-
-
-
-
-
-
-
