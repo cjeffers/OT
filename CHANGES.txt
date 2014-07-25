@@ -6,3 +6,4 @@ v0.2.3, 2013-08-06 -- edge bugs. still.
 v0.2.4, 2013-08-08 -- tested out all edge bugs on poot.PoOT.get_grammars()
 v0.3.0, 2013-08-28 -- added OTStats class to poot module
 v0.3.1, 2013-08-30 -- generalized OTStats class to filter based on a given grammar
+v0.3.2, 2014-07-25 -- add CV dataset to data

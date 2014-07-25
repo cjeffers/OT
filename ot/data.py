@@ -18,7 +18,7 @@ no_rankings = [
                 {   'input': 'i1',
                     'output': 'o1',
                     'vvector': {1:0, 2:0, 3:0, 4:0},
-                    'optimal': False
+                    'optimal': False,
                 },
 
                 {   'input': 'i1',
@@ -335,6 +335,44 @@ voweldset = [
                     'optimal': False,
                 },
         ]
+
+cv_dset = {
+    "constraints" : [ "ONSET", "*CODA", "MAX", "DEP" ],
+    "candidates" : [
+        { "input" : "CV", "output" : "CV",
+          "optimal" : True, "vvector" : [ 0, 0, 0, 0 ] },
+        { "input" : "CV", "output" : "CVC",
+          "optimal" : False, "vvector" : [ 0, 1, 0, 1 ] },
+        { "input" : "CV", "output" : "VC",
+          "optimal" : False, "vvector" : [ 1, 1, 1, 1 ] },
+        { "input" : "CV", "output" : "V",
+          "optimal" : False, "vvector" : [ 1, 0, 1, 0 ] },
+        { "input" : "CVC", "output" : "CV",
+          "optimal" : True, "vvector" : [ 0, 0, 1, 0 ] },
+        { "input" : "CVC", "output" : "CVC",
+          "optimal" : False, "vvector" : [ 0, 1, 0, 0 ] },
+        { "input" : "CVC", "output" : "VC",
+          "optimal" : False, "vvector" : [ 1, 1, 1, 0 ] },
+        { "input" : "CVC", "output" : "V",
+          "optimal" : False, "vvector" : [ 1, 0, 2, 0 ] },
+        { "input" : "VC", "output" : "CV",
+          "optimal" : True, "vvector" : [ 0, 0, 1, 1 ] },
+        { "input" : "VC", "output" : "CVC",
+          "optimal" : False, "vvector" : [ 0, 1, 0, 1 ] },
+        { "input" : "VC", "output" : "VC",
+          "optimal" : False, "vvector" : [ 1, 1, 0, 0 ] },
+        { "input" : "VC", "output" : "V",
+          "optimal" : False, "vvector" : [ 1, 0, 1, 0 ] },
+        { "input" : "V", "output" : "CV",
+          "optimal" : True, "vvector" : [ 0, 0, 0, 1 ] },
+        { "input" : "V", "output" : "CVC",
+          "optimal" : False, "vvector" : [ 0, 1, 0, 2 ] },
+        { "input" : "V", "output" : "VC",
+          "optimal" : False, "vvector" : [ 1, 1, 0, 1 ] },
+        { "input" : "V", "output" : "V",
+          "optimal" : False, "vvector" : [ 1, 0, 0, 0 ] }
+    ]
+}
 
 # Finnish Case Dataset
 casedset = [
