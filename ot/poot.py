@@ -25,14 +25,22 @@ Entailments
 import itertools
 import dataset
 from ordertheory import Powerset
-from lattice import PartialOrderLattice as POLattice
+from lattice import PartialOrderLattice, TotalOrderLattice
+
+
+# TODO make exception to raise when dataset is too big for poot
+class TooManyConstraintsForPartialGrammars(Exception):
+    pass
 
 
 def _ensure_grammardset(fun, *args, **kwargs):
     """Wrap a function to make sure the GrammarDataSet exists."""
     def wrapper(self, *args, **kwargs):
         if self._grammardset is None:
-            gdset = dataset.GrammarDataSet()
+            if self.set_n <= PoOT.MAX_POOT_CONSTRAINTS:
+                gdset = dataset.GrammarDataSet()
+            else:
+                gdset = dataset.ClassicalGrammarDataset()
             gdset.dset = self.dset
             gdset.cdset = gdset.dset
             gdset.fdset = gdset.cdset
@@ -43,6 +51,8 @@ def _ensure_grammardset(fun, *args, **kwargs):
 
 
 class PoOT(object):
+
+    MAX_POOT_CONSTRAINTS = 5
 
     def __init__(self, lat_dir, mongo_db=None):
         self._dset = []
@@ -60,6 +70,7 @@ class PoOT(object):
         if type(value) is tuple:
             value = value[0]
         opts = [value[i]['optimal'] for i, cand in enumerate(value)]
+        self.set_n = len(value[0]['vvector'])
         if not any(opts):
             raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
@@ -76,7 +87,12 @@ class PoOT(object):
     @lattice.setter
     def lattice(self, value):
         cons = len(value[0]['vvector'])
-        self._lattice = POLattice(cons, self._lat_dir, self._mongo_db)
+        if cons <= PoOT.MAX_POOT_CONSTRAINTS:
+            self._lattice = PartialOrderLattice(cons,
+                                                self._lat_dir,
+                                                self._mongo_db)
+        else:
+            self._lattice = TotalOrderLattice(cons)
 
     @_ensure_grammardset
     def get_optimal_candidates(self):
@@ -105,6 +121,9 @@ class PoOT(object):
     @_ensure_grammardset
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
+        if not classical and self.set_n > PoOT.MAX_POOT_CONSTRAINTS:
+            msg = "Datasets with more than %d constraints can only find classical grammars." % PoOT.MAX_POOT_CONSTRAINTS
+            raise TooManyConstraintsForPartialGrammars(msg)
         return Grammars().get_grammars(self._grammardset, classical)
 
     def is_compatible_COT_grammar(self, grammar):

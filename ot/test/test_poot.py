@@ -71,6 +71,21 @@ class TestPoOT(object):
         ])
         assert self.p.get_grammars(classical=False) == grammars
 
+    def check_get_big_cot_grammars(self, n):
+        self.p.dset = getattr(data, "trivial_cot_%d" % n)
+        grams = self.p.get_grammars(classical=True)
+        assert len(grams) == 1
+        assert len(grams.pop()) == sum(range(n))
+
+    def test_get_big_cot_grammars(self):
+        for n in range(6, 9):
+            yield self.check_get_big_cot_grammars, n
+
+    @raises(poot.TooManyConstraintsForPartialGrammars)
+    def test_big_grammar_fails_poot(self):
+        self.p.dset = data.trivial_cot_8
+        self.p.get_grammars(classical=False)
+
     def test_get_cot_grammars(self):
         """Gets all the right COT grammars?"""
         self.p.dset = data.hbounded

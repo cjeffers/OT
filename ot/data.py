@@ -374,6 +374,52 @@ cv_dset = {
     ]
 }
 
+trivial_cot_6 = [
+    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1 }},
+    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0 }},
+    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1 }},
+    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0 }},
+    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1 }},
+    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0 }},
+    {"input": "d", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1 }},
+    {"input": "d", "output": "f", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0 }},
+    {"input": "e", "output": "g", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1 }},
+    {"input": "e", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0 }}
+]
+
+trivial_cot_7 = [
+    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1 }},
+    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1}},
+    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1}},
+    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "d", "output": "h", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1}},
+    {"input": "d", "output": "i", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0 }},
+    {"input": "e", "output": "j", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1}},
+    {"input": "e", "output": "k", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0 }},
+    {"input": "f", "output": "l", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1}},
+    {"input": "f", "output": "m", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0 }}
+]
+
+trivial_cot_8 = [
+    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "d", "output": "h", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "d", "output": "i", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "e", "output": "j", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1, 8:1 }},
+    {"input": "e", "output": "k", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0, 8:0 }},
+    {"input": "f", "output": "l", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:1 }},
+    {"input": "f", "output": "m", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0, 8:0 }},
+    {"input": "g", "output": "1", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:1 }},
+    {"input": "g", "output": "o", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:0 }}
+]
+
+
 # Finnish Case Dataset
 casedset = [
 

@@ -121,19 +121,25 @@ class StrictOrders(object):
                 if not self.__is_not_transitive(relation):  # if transitive
                     yield frozenset(relation)
 
-    def get_orders(self, iterable):
+    def get_orders(self, iterable, verbose=False):
         """Return the lattice of all partial orders of iterable.
 
         Each partial order is a key into the lattice, and the value
         is a dict containing that order's maxset, upset, and downset.
         """
+        if verbose:
+            print "getting orders"
         l = list(iterable)
         torders = list(StrictTotalOrders().orders(l))
         all_orders = list(self.__orders(l))
+        count = 0
         for s, t in itertools.product(all_orders, all_orders):
             try:
                 self.lattice[s]
             except:
+                if verbose:
+                    count += 1
+                    print "inserting #%d (%d total)" % (count, const_info[len(l)]['total_poots'])
                 self.lattice.update({s: {'max': set([]),
                                          'up': set([]),
                                          'down': set([])}})
@@ -148,3 +154,12 @@ class StrictOrders(object):
                 if t in torders:
                     self.lattice[s]['max'].add(t)
         return self.lattice
+
+
+const_info = {
+    2: {'total_poots': 3, 'total_cots': 2, 'cot_len': 1},
+    3: {'total_poots': 19, 'total_cots': 6, 'cot_len': 3},
+    4: {'total_poots': 219, 'total_cots': 24, 'cot_len': 6},
+    5: {'total_poots': 4231, 'total_cots': 120, 'cot_len': 10},
+    6: {'total_poots': 130023, 'total_cots': 720, 'cot_len': 15}
+}

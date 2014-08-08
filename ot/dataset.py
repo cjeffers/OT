@@ -172,9 +172,9 @@ class ComparativeDataSet(DataSet):
 
         def helper(x, y):
             try:
-                return self._cdset[x].update({y : {}})
-            except:
-                return self._cdset.update({x : {y :{}}})
+                self._cdset[x].update({y : {}})
+            except KeyError:
+                self._cdset.update({x : {y :{}}})
 
         for x, y in itertools.product(dset, dset):
             if x.inp == y.inp:
@@ -356,6 +356,12 @@ class GrammarDataSet(PoOTDataSet):
         return set.intersection(*map(set, l))
 
 
+class ClassicalGrammarDataset(GrammarDataSet):
 
+    def get_grammardset(self, fdset, lattice):
+        cotdset = self.get_cotdset(fdset, lattice)
+        for cand in cotdset:
+            opt_cots = self._opt_grams(cotdset[cand])
+            cotdset[cand].update({'opt_cots': opt_cots})
 
-
+        return cotdset

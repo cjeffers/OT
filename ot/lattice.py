@@ -6,7 +6,7 @@ Lattice -- stores information and methods for implementing a lattice
 
 import cPickle
 import os
-import ordertheory
+from ordertheory import StrictOrders, StrictTotalOrders
 
 
 class PartialOrderLattice(object):
@@ -73,7 +73,7 @@ class PartialOrderLattice(object):
             raise KeyError('Lattice must be initialized from a pickle, '
                            'MongoDB, or generated.')
 
-    def generate_lattice(self):
+    def generate_lattice(self, verbose=False):
         """Generates a lattice from scratch.
 
         Consider this fair warning: lattices of partial orders get
@@ -84,8 +84,7 @@ class PartialOrderLattice(object):
 
         """
         if not self._lattice:
-            lat = ordertheory.StrictOrders().get_orders(xrange(1,
-                                                               self.set_n+1))
+            lat = StrictOrders().get_orders(xrange(1, self.set_n + 1), verbose)
             self._lattice = lat
 
     def __read_from_pickle(self, size, dirname):
@@ -139,3 +138,20 @@ class PartialOrderLattice(object):
         for k, v in self._lattice.iteritems():
             doc = {'set': str(sorted(k)), 'value': str(v)}
             mongo_col.insert(doc)
+
+
+class TotalOrderLattice(object):
+    """The lattice of total orders."""
+
+    def __init__(self, set_n):
+        self.set_n = set_n
+        self.torders = list(StrictTotalOrders().orders(xrange(1, self.set_n + 1)))
+
+    def __getitem__(self, key):
+        if type(key) is not frozenset:
+            raise TypeError("keys to lattice must be of type frozenset")
+        super_sets = set()
+        for total_order in self.torders:
+            if total_order >= key:
+                super_sets.add(total_order)
+        return {'max': super_sets}

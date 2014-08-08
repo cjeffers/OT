@@ -100,3 +100,17 @@ def test_write_to_mongo():
     """Wrtie lattice to MongoDB ok?"""
     for n in [3, 4]:
         yield check_write_lattice_to_mongo, n
+
+
+def check_cot_lattice(n):
+    lat = lattice.TotalOrderLattice(n)
+    f = frozenset([(1, 2), (2, 3), (2, 4)])
+    cots = lat[f]['max']
+    for cot in cots:
+        assert len(cot) == sum(xrange(n))
+        assert cot > f
+
+
+def test_cot_lattice():
+    for n in range(1, 9):
+        yield check_cot_lattice, n
