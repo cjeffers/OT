@@ -131,7 +131,7 @@ class StrictOrders(object):
             print "getting orders"
         l = list(iterable)
         torders = list(StrictTotalOrders().orders(l))
-        all_orders = list(self.__orders(l))
+        all_orders = set(self.__orders(l))
         count = 0
         for s, t in itertools.product(all_orders, all_orders):
             try:
@@ -149,7 +149,7 @@ class StrictOrders(object):
                     self.lattice[s]['up'].add(t)
                     if t in torders:
                         self.lattice[s]['max'].add(t)
-            elif s.issubset(t):
+            if s.issubset(t):
                 self.lattice[s]['up'].add(t)
                 if t in torders:
                     self.lattice[s]['max'].add(t)
