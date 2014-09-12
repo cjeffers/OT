@@ -52,7 +52,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
 
 class PoOT(object):
 
-    MAX_POOT_CONSTRAINTS = 5
+    MAX_POOT_CONSTRAINTS = 6
 
     def __init__(self, lat_dir, mongo_db=None):
         self._dset = []
@@ -122,7 +122,8 @@ class PoOT(object):
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
         if not classical and self.set_n > PoOT.MAX_POOT_CONSTRAINTS:
-            msg = "Datasets with more than %d constraints can only find classical grammars." % PoOT.MAX_POOT_CONSTRAINTS
+            msg = ("Datasets with more than %d constraints can only find"
+                   "classical grammars.") % PoOT.MAX_POOT_CONSTRAINTS
             raise TooManyConstraintsForPartialGrammars(msg)
         return Grammars().get_grammars(self._grammardset, classical)
 

@@ -8,3 +8,4 @@ v0.3.0, 2013-08-28 -- added OTStats class to poot module
 v0.3.1, 2013-08-30 -- generalized OTStats class to filter based on a given grammar
 v0.3.2, 2014-07-25 -- add CV dataset to data
 v0.4.0, 2014-08-08 -- add ClassicalOrderLattice, enable COTs up to 8 constraints
+v0.4.01, 2014-09-12 -- enable PoOTs up to 6 constraints
