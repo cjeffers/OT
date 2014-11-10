@@ -281,56 +281,56 @@ single_non_opt_cand =[
 
 voweldset = [
                 {   'input': 'ovea',
-                    'output': 'o.ve.a',
+                    'output': 'o-ve-a',
                     'vvector': {1:0, 2:1, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'ovea',
-                    'output': 'o.vee',
+                    'output': 'o-vee',
                     'vvector': {1:0, 2:0, 3:0, 4:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'idea',
-                    'output': 'i.de.a',
+                    'output': 'i-de-a',
                     'vvector': {1:0, 2:1, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'idea',
-                    'output': 'i.dee',
+                    'output': 'i-dee',
                     'vvector': {1:1, 2:0, 3:0, 4:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'lasi-a',
-                    'output': 'la.si.a',
+                    'output': 'la-si-a',
                     'vvector': {1:0, 2:0, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'lasi-a',
-                    'output': 'la.sii',
+                    'output': 'la-sii',
                     'vvector': {1:0, 2:0, 3:0, 4:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'rasia',
-                    'output': 'ra.si.a',
+                    'output': 'ra-si-a',
                     'vvector': {1:0, 2:0, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'rasia',
-                    'output': 'ra.sii',
+                    'output': 'ra-sii',
                     'vvector': {1:1, 2:0, 3:0, 4:1},
                     'optimal': False,
                 },
