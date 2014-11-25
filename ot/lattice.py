@@ -42,6 +42,7 @@ class PartialOrderLattice(object):
         will be raised if the access is attempted.
 
         """
+        self.num_lat_queries = 0
         self.set_n = set_n
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
@@ -49,7 +50,9 @@ class PartialOrderLattice(object):
             self._mongo_coll = getattr(self._mongo_db, 'lat%d' % self.set_n)
             self._lattice = None
         elif self._lat_dir:
+            print 'loading lattice from cPickle...'
             self._lattice = self.__read_from_pickle(self.set_n, self._lat_dir)
+            print 'lattice loaded.'
             self._mongo_coll = None
         else:
             self._lattice = None
@@ -68,6 +71,7 @@ class PartialOrderLattice(object):
             mongo_doc = self._mongo_coll.find_one({'set': str(sorted(key))})
             return eval(mongo_doc['value'])
         elif self._lattice is not None:
+            self.num_lat_queries += 1
             return self._lattice[key]
         else:
             raise KeyError('Lattice must be initialized from a pickle, '
@@ -145,13 +149,18 @@ class TotalOrderLattice(object):
 
     def __init__(self, set_n):
         self.set_n = set_n
-        self.torders = list(StrictTotalOrders().orders(xrange(1, self.set_n + 1)))
+        self.torders = list(StrictTotalOrders().orders(
+            xrange(1, self.set_n + 1)
+        ))
+        self.num_lat_queries = 0
 
     def __getitem__(self, key):
+        print "querying lattice"
         if type(key) is not frozenset:
             raise TypeError("keys to lattice must be of type frozenset")
         super_sets = set()
         for total_order in self.torders:
             if total_order >= key:
                 super_sets.add(total_order)
+        self.num_lat_queries += 1
         return {'max': super_sets}

@@ -52,7 +52,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
 
 class PoOT(object):
 
-    MAX_POOT_CONSTRAINTS = 6
+    MAX_POOT_CONSTRAINTS = 5
 
     def __init__(self, lat_dir, mongo_db=None):
         self._dset = []
@@ -60,6 +60,8 @@ class PoOT(object):
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
         self._grammardset = None
+        self._compatible_cots = None
+        self._compatible_poots = None
 
     @property
     def dset(self):
@@ -75,6 +77,8 @@ class PoOT(object):
             raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
         self._dset = self._dset + value
+        self._compatible_cots = None
+        self._compatible_poots = None
 
     @property
     def lattice(self):
@@ -121,11 +125,27 @@ class PoOT(object):
     @_ensure_grammardset
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
+        print 'getting grammars in poot.py'
         if not classical and self.set_n > PoOT.MAX_POOT_CONSTRAINTS:
             msg = ("Datasets with more than %d constraints can only find"
                    "classical grammars.") % PoOT.MAX_POOT_CONSTRAINTS
             raise TooManyConstraintsForPartialGrammars(msg)
-        return Grammars().get_grammars(self._grammardset, classical)
+        if classical:
+            if not self._compatible_cots:
+                self._compatible_cots = Grammars().get_grammars(
+                    self._grammardset, classical
+                )
+            return self._compatible_cots
+        else:
+            if not self._compatible_poots:
+                self._compatible_poots = Grammars().get_grammars(
+                    self._grammardset, classical
+                )
+                cot_len = sum(range(self.set_n))
+                compatible_cots = [g for g in self._compatible_poots
+                                   if len(g) == cot_len]
+                self._compatible_cots = set(compatible_cots)
+            return self._compatible_poots
 
     def is_compatible_COT_grammar(self, grammar):
         """Check whether COT grammar is compatible with the dataset."""

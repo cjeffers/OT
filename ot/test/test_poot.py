@@ -2,6 +2,7 @@
 
 import cPickle
 from nose.tools import raises
+from pymongo import MongoClient
 from .. import poot
 from .. import data
 
@@ -71,11 +72,14 @@ class TestPoOT(object):
         ])
         assert self.p.get_grammars(classical=False) == grammars
 
-    def check_get_big_cot_grammars(self, n):
-        self.p.dset = getattr(data, "trivial_cot_%d" % n)
-        grams = self.p.get_grammars(classical=True)
+    def check_get_big_cot_grammars(self, set_n):
+        p = poot.PoOT(lat_dir='../lattices')
+        p.dset = getattr(data, "trivial_cot_%d" % set_n)
+        grams = p.get_grammars(classical=True)
+        print 'queries to lattice:', p._lattice.num_lat_queries
         assert len(grams) == 1
-        assert len(grams.pop()) == sum(range(n))
+        gram = grams.pop()
+        assert len(gram) == sum(range(set_n))
 
     def test_get_big_cot_grammars(self):
         for n in range(6, 9):

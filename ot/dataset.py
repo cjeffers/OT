@@ -14,6 +14,7 @@ it.
 import itertools
 import ordertheory
 
+
 class DataSet(object):
     """Construct Dataset object.
 
@@ -158,7 +159,8 @@ class ComparativeDataSet(DataSet):
         else:
             hbounded = False
             iequal = False
-        return {'win': win, 'lose': lose, 'hbounded': hbounded, 'iequal': iequal}
+        return {'win': win, 'lose': lose,
+                'hbounded': hbounded, 'iequal': iequal}
 
     def __init_cdset(self, dset):
         """Create an (empty) comparative dictionary (or dataset).
@@ -169,16 +171,15 @@ class ComparativeDataSet(DataSet):
         one of cand0 or cand1 is optimal.
 
         """
-
-        def helper(x, y):
+        def add_cand1_to_cand0_comparisons(cand0, cand1):
             try:
-                self._cdset[x].update({y : {}})
+                self._cdset[cand0].update({cand1: {}})
             except KeyError:
-                self._cdset.update({x : {y :{}}})
+                self._cdset.update({cand0: {cand1: {}}})
 
-        for x, y in itertools.product(dset, dset):
-            if x.inp == y.inp:
-                helper(x, y)
+        for cand0, cand1 in itertools.product(dset, dset):
+            if cand0.inp == cand1.inp:
+                add_cand1_to_cand0_comparisons(cand0, cand1)
         return self._cdset
 
     def get_cdset(self, dset):
@@ -244,7 +245,7 @@ class FunctionalDataSet(ComparativeDataSet):
             for cand1 in cdset[cand0].keys():
                 finfo = cdset[cand0][cand1]
                 funcs = fspace.funcs(finfo.lose, finfo.win)
-                finfo.info.update({'fspace' : funcs })
+                finfo.info.update({'fspace': funcs})
                 cdset[cand0][cand1] = FunctionalInfo(finfo.info)
         return cdset
 
@@ -268,16 +269,23 @@ class COTDataSet(FunctionalDataSet):
         COT grammars that satisfies that comparison.
 
         """
+        num_pairs = 0
         for cand0 in fdset.keys():
             for cand1 in fdset[cand0].keys():
+                num_pairs += 1
+                print 'getting cots for pair', num_pairs
                 s = set([])
                 cotinfo = fdset[cand0][cand1]
                 if cotinfo.iequal:
+                    print '    querying lattice[%s[%s]]' % (str(frozenset()), 'max')
                     cot_gspace = lattice[frozenset([])]['max']
+                    print '    updating cotinfo'
                     cotinfo.info.update({'cots': cot_gspace})
                 else:
                     for f in cotinfo.fspace:
+                        print '    querying lattice[%s[%s]]' % (str(frozenset(f)), 'max')
                         cots = lattice[frozenset(f)]['max']
+                        print '    updating cotinfo'
                         s.update(cots)
                     cotinfo.info.update({'cots': s})
                 fdset[cand0][cand1] = COTInfo(cotinfo.info)
@@ -304,17 +312,28 @@ class PoOTDataSet(COTDataSet):
         requirements of the candidate pair.
 
         """
+        print 'getting cotdset'
         cotdset = self.get_cotdset(fdset, lattice)
+
+        print 'making pootdset'
+        num_pairs = 0
         for cand0 in cotdset:
             for cand1 in cotdset[cand0]:
+                num_pairs += 1
+                print 'making pootinfo for pair', num_pairs
                 pootinfo = cotdset[cand0][cand1]
                 if pootinfo.iequal:
+                    print '    querying lattice[%s[%s]]' % (str(frozenset()), 'up')
                     poots = lattice[frozenset([])]['up']
                 elif not pootinfo.iequal and not pootinfo.cots:
                     poots = pootinfo.cots
                 else:
-                    downs = [lattice[frozenset(cot)]['down'] for cot in pootinfo.cots]
+                    downs = []
+                    for cot in pootinfo.cots:
+                        print '    querying lattice[%s[%s]]' % (str(frozenset(cot)), 'down')
+                        downs.append(lattice[frozenset(cot)]['down'])
                     poots = set.union(*map(set, downs))
+                print '    updating pootinfo'
                 pootinfo.info.update({'poots': poots})
                 cotdset[cand0][cand1] = PoOTInfo(pootinfo.info)
         return cotdset
@@ -331,7 +350,10 @@ class GrammarDataSet(PoOTDataSet):
     """Store the optimal grammars for each candidate in the dataset"""
 
     def get_grammardset(self, fdset, lattice):
+        print 'getting pootdset'
         pootdset = self.get_pootdset(fdset, lattice)
+
+        print 'making gdset'
         for cand in pootdset:
             opt_cots = self._opt_grams(pootdset[cand])
             opt_poots = self._opt_grams(pootdset[cand], classical=False)
