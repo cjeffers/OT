@@ -52,7 +52,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
 
 class PoOT(object):
 
-    MAX_POOT_CONSTRAINTS = 5
+    MAX_POOT_CONSTRAINTS = 6
 
     def __init__(self, lat_dir, mongo_db=None):
         self._dset = []
