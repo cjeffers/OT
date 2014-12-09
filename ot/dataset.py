@@ -273,19 +273,14 @@ class COTDataSet(FunctionalDataSet):
         for cand0 in fdset.keys():
             for cand1 in fdset[cand0].keys():
                 num_pairs += 1
-                print 'getting cots for pair', num_pairs
                 s = set([])
                 cotinfo = fdset[cand0][cand1]
                 if cotinfo.iequal:
-                    print '    querying lattice[%s[%s]]' % (str(frozenset()), 'max')
                     cot_gspace = lattice[frozenset([])]['max']
-                    print '    updating cotinfo'
                     cotinfo.info.update({'cots': cot_gspace})
                 else:
                     for f in cotinfo.fspace:
-                        print '    querying lattice[%s[%s]]' % (str(frozenset(f)), 'max')
                         cots = lattice[frozenset(f)]['max']
-                        print '    updating cotinfo'
                         s.update(cots)
                     cotinfo.info.update({'cots': s})
                 fdset[cand0][cand1] = COTInfo(cotinfo.info)
@@ -312,28 +307,22 @@ class PoOTDataSet(COTDataSet):
         requirements of the candidate pair.
 
         """
-        print 'getting cotdset'
         cotdset = self.get_cotdset(fdset, lattice)
 
-        print 'making pootdset'
         num_pairs = 0
         for cand0 in cotdset:
             for cand1 in cotdset[cand0]:
                 num_pairs += 1
-                print 'making pootinfo for pair', num_pairs
                 pootinfo = cotdset[cand0][cand1]
                 if pootinfo.iequal:
-                    print '    querying lattice[%s[%s]]' % (str(frozenset()), 'up')
                     poots = lattice[frozenset([])]['up']
                 elif not pootinfo.iequal and not pootinfo.cots:
                     poots = pootinfo.cots
                 else:
                     downs = []
                     for cot in pootinfo.cots:
-                        print '    querying lattice[%s[%s]]' % (str(frozenset(cot)), 'down')
                         downs.append(lattice[frozenset(cot)]['down'])
                     poots = set.union(*map(set, downs))
-                print '    updating pootinfo'
                 pootinfo.info.update({'poots': poots})
                 cotdset[cand0][cand1] = PoOTInfo(pootinfo.info)
         return cotdset
@@ -350,10 +339,8 @@ class GrammarDataSet(PoOTDataSet):
     """Store the optimal grammars for each candidate in the dataset"""
 
     def get_grammardset(self, fdset, lattice):
-        print 'getting pootdset'
         pootdset = self.get_pootdset(fdset, lattice)
 
-        print 'making gdset'
         for cand in pootdset:
             opt_cots = self._opt_grams(pootdset[cand])
             opt_poots = self._opt_grams(pootdset[cand], classical=False)

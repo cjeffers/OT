@@ -28,7 +28,6 @@ from ordertheory import Powerset
 from lattice import PartialOrderLattice, TotalOrderLattice
 
 
-# TODO make exception to raise when dataset is too big for poot
 class TooManyConstraintsForPartialGrammars(Exception):
     pass
 
@@ -125,7 +124,6 @@ class PoOT(object):
     @_ensure_grammardset
     def get_grammars(self, classical=True):
         """Get all grammars compatible with a dataset."""
-        print 'getting grammars in poot.py'
         if not classical and self.set_n > PoOT.MAX_POOT_CONSTRAINTS:
             msg = ("Datasets with more than %d constraints can only find"
                    "classical grammars.") % PoOT.MAX_POOT_CONSTRAINTS

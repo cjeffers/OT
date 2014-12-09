@@ -155,7 +155,6 @@ class TotalOrderLattice(object):
         self.num_lat_queries = 0
 
     def __getitem__(self, key):
-        print "querying lattice"
         if type(key) is not frozenset:
             raise TypeError("keys to lattice must be of type frozenset")
         super_sets = set()
