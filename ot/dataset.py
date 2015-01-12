@@ -71,6 +71,9 @@ class Candidate(object):
 
     """
 
+    def __str__(self):
+        return str(self.cand)
+
     def __init__(self, dict0):
         self._inp = dict0['input']
         self._out = dict0['output']
@@ -171,25 +174,38 @@ class ComparativeDataSet(DataSet):
         one of cand0 or cand1 is optimal.
 
         """
-        def add_cand1_to_cand0_comparisons(cand0, cand1):
-            try:
-                self._cdset[cand0].update({cand1: {}})
-            except KeyError:
-                self._cdset.update({cand0: {cand1: {}}})
-
+        cdset = {}
         for cand0, cand1 in itertools.product(dset, dset):
             if cand0.inp == cand1.inp:
-                add_cand1_to_cand0_comparisons(cand0, cand1)
-        return self._cdset
+                try:
+                    cdset[cand0].update({cand1: {}})
+                except KeyError:
+                    cdset.update({cand0: {cand1: {}}})
+        return cdset
 
     def get_cdset(self, dset):
         cdset = self.__init_cdset(dset)
+        self.hbounded = set()
         for cand0 in cdset.keys():
             for cand1 in cdset[cand0].keys():
                 compinfo = cdset[cand0][cand1]
                 comps = self.__comp(cand0.vvec, cand1.vvec)
+                if comps['hbounded']:  # remove hbounded candidates
+                    self.hbounded.add(cand1)
                 compinfo.update(comps)
                 cdset[cand0][cand1] = ComparativeInfo(compinfo)
+        self._remove_hbounded_cands(cdset)
+        return cdset
+
+    def _remove_hbounded_cands(self, cdset):
+        for hbound in self.hbounded:
+            cdset.pop(hbound)
+        for cand0 in cdset:
+            for hbound in self.hbounded:
+                try:
+                    cdset[cand0].pop(hbound)
+                except KeyError:
+                    pass
         return cdset
 
 
@@ -241,8 +257,8 @@ class FunctionalDataSet(ComparativeDataSet):
 
         """
         fspace = ordertheory.FunctionalSpace()
-        for cand0 in cdset.keys():
-            for cand1 in cdset[cand0].keys():
+        for cand0 in cdset:
+            for cand1 in cdset[cand0]:
                 finfo = cdset[cand0][cand1]
                 funcs = fspace.funcs(finfo.lose, finfo.win)
                 finfo.info.update({'fspace': funcs})

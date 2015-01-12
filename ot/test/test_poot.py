@@ -1,17 +1,20 @@
 """Tests for poot module"""
 
 import cPickle
+import os.path
+
 from nose.tools import raises
-from pymongo import MongoClient
 from .. import poot
 from .. import data
+
+LAT_DIR = "lattices"
 
 
 class TestPoOT(object):
 
     def setUp(self):
-        self.p = poot.PoOT(lat_dir='../lattices')
-        with open('../lattices/gspace_4cons.p', 'rb') as f:
+        self.p = poot.PoOT(lat_dir=LAT_DIR)
+        with open(os.path.join(LAT_DIR, 'gspace_4cons.p'), 'rb') as f:
             self.lattice = cPickle.load(f)
 
     def test_lattice_setter(self):
@@ -36,22 +39,22 @@ class TestPoOT(object):
         """Gets all and only the optimal candidates?"""
         self.p.dset = data.voweldset
         opt_cands = set([
-            ('ovea', 'o.ve.a'), ('ovea', 'o.vee'), ('idea', 'i.de.a'),
-            ('lasi-a', 'la.si.a'), ('lasi-a', 'la.sii'),
-            ('rasia', 'ra.si.a')
+            ('ovea', 'o-ve-a'), ('ovea', 'o-vee'), ('idea', 'i-de-a'),
+            ('lasi-a', 'la-si-a'), ('lasi-a', 'la-sii'),
+            ('rasia', 'ra-si-a')
         ])
         assert set(self.p.get_optimal_candidates()) == opt_cands
 
     def test_get_nonoptimal_candidates(self):
         """Gets all and only nonoptimal candidates?"""
         self.p.dset = data.voweldset
-        non_opt_cands = set([('idea', 'i.dee'), ('rasia', 'ra.sii')])
+        non_opt_cands = set([('idea', 'i-dee'), ('rasia', 'ra-sii')])
         assert set(self.p.get_nonoptimal_candidates()) == non_opt_cands
 
     def test_get_hbounded_candidates(self):
         """Gets all and only the harmonically bounded candidates?"""
         self.p.dset = data.hbounded
-        hbounded = [(('i1', 'o1'), ('i1', 'o2'))]
+        hbounded = [('i1', 'o2')]
         assert self.p.get_harmonically_bounded_candidates() == hbounded
 
     def test_get_poot_grammars(self):
@@ -73,7 +76,8 @@ class TestPoOT(object):
         assert self.p.get_grammars(classical=False) == grammars
 
     def check_get_big_cot_grammars(self, set_n):
-        p = poot.PoOT(lat_dir='../lattices')
+        print "checking %d" % set_n
+        p = poot.PoOT(lat_dir=LAT_DIR)
         p.dset = getattr(data, "trivial_cot_%d" % set_n)
         grams = p.get_grammars(classical=True)
         print 'queries to lattice:', p._lattice.num_lat_queries
@@ -82,7 +86,7 @@ class TestPoOT(object):
         assert len(gram) == sum(range(set_n))
 
     def test_get_big_cot_grammars(self):
-        for n in range(6, 9):
+        for n in range(7, 9):
             yield self.check_get_big_cot_grammars, n
 
     @raises(poot.TooManyConstraintsForPartialGrammars)
@@ -176,73 +180,74 @@ class TestPoOT(object):
         """Gets entailments?"""
         self.p.dset = data.voweldset
         ents = {
-            frozenset([('ovea', 'o.vee')]): {
+            frozenset([('ovea', 'o-vee')]): {
                 'down': set([
-                    frozenset([('lasi-a', 'la.sii')]),
-                    frozenset([('idea', 'i.dee')]),
-                    frozenset([('rasia', 'ra.sii')]),
-                    frozenset([('ovea', 'o.vee')])]),
+                    frozenset([('lasi-a', 'la-sii')]),
+                    frozenset([('idea', 'i-dee')]),
+                    frozenset([('rasia', 'ra-sii')]),
+                    frozenset([('ovea', 'o-vee')])]),
                 'up': set([
-                    frozenset([('ovea', 'o.vee')])])},
-            frozenset([('rasia', 'ra.si.a')]): {
+                    frozenset([('ovea', 'o-vee')])])},
+            frozenset([('rasia', 'ra-si-a')]): {
                 'down': set([
-                    frozenset([('ovea', 'o.ve.a')]),
-                    frozenset([('lasi-a', 'la.si.a')]),
-                    frozenset([('rasia', 'ra.si.a')]),
-                    frozenset([('idea', 'i.de.a')])]),
-                'up': set([frozenset([('rasia', 'ra.si.a')])])},
-            frozenset([('idea', 'i.de.a')]): {
+                    frozenset([('ovea', 'o-ve-a')]),
+                    frozenset([('lasi-a', 'la-si-a')]),
+                    frozenset([('rasia', 'ra-si-a')]),
+                    frozenset([('idea', 'i-de-a')])]),
+                'up': set([frozenset([('rasia', 'ra-si-a')])])},
+            frozenset([('idea', 'i-de-a')]): {
                 'down': set([
-                    frozenset([('ovea', 'o.ve.a')]),
-                    frozenset([('idea', 'i.de.a')])]),
+                    frozenset([('ovea', 'o-ve-a')]),
+                    frozenset([('idea', 'i-de-a')])]),
                 'up': set([
-                    frozenset([('rasia', 'ra.si.a')]),
-                    frozenset([('idea', 'i.de.a')])])},
-            frozenset([('lasi-a', 'la.sii')]): {
+                    frozenset([('rasia', 'ra-si-a')]),
+                    frozenset([('idea', 'i-de-a')])])},
+            frozenset([('lasi-a', 'la-sii')]): {
                 'down': set([
-                    frozenset([('lasi-a', 'la.sii')]),
-                    frozenset([('rasia', 'ra.sii')])]),
+                    frozenset([('lasi-a', 'la-sii')]),
+                    frozenset([('rasia', 'ra-sii')])]),
                 'up': set([
-                    frozenset([('lasi-a', 'la.sii')]),
-                    frozenset([('ovea', 'o.vee')])])},
-            frozenset([('rasia', 'ra.sii')]): {
+                    frozenset([('lasi-a', 'la-sii')]),
+                    frozenset([('ovea', 'o-vee')])])},
+            frozenset([('rasia', 'ra-sii')]): {
                 'down': set([
-                    frozenset([('rasia', 'ra.sii')])]),
+                    frozenset([('rasia', 'ra-sii')])]),
                 'up': set([
-                    frozenset([('lasi-a', 'la.sii')]),
-                    frozenset([('idea', 'i.dee')]),
-                    frozenset([('rasia', 'ra.sii')]),
-                    frozenset([('ovea', 'o.vee')])])},
-            frozenset([('lasi-a', 'la.si.a')]): {
+                    frozenset([('lasi-a', 'la-sii')]),
+                    frozenset([('idea', 'i-dee')]),
+                    frozenset([('rasia', 'ra-sii')]),
+                    frozenset([('ovea', 'o-vee')])])},
+            frozenset([('lasi-a', 'la-si-a')]): {
                 'down': set([
-                    frozenset([('lasi-a', 'la.si.a')]),
-                    frozenset([('ovea', 'o.ve.a')])]),
+                    frozenset([('lasi-a', 'la-si-a')]),
+                    frozenset([('ovea', 'o-ve-a')])]),
                 'up': set([
-                    frozenset([('lasi-a', 'la.si.a')]),
-                    frozenset([('rasia', 'ra.si.a')])])},
-            frozenset([('idea', 'i.dee')]): {
+                    frozenset([('lasi-a', 'la-si-a')]),
+                    frozenset([('rasia', 'ra-si-a')])])},
+            frozenset([('idea', 'i-dee')]): {
                 'down': set([
-                    frozenset([('rasia', 'ra.sii')]),
-                    frozenset([('idea', 'i.dee')])]),
+                    frozenset([('rasia', 'ra-sii')]),
+                    frozenset([('idea', 'i-dee')])]),
                 'up': set([
-                    frozenset([('idea', 'i.dee')]),
-                    frozenset([('ovea', 'o.vee')])])},
-            frozenset([('ovea', 'o.ve.a')]): {
+                    frozenset([('idea', 'i-dee')]),
+                    frozenset([('ovea', 'o-vee')])])},
+            frozenset([('ovea', 'o-ve-a')]): {
                 'down': set([
-                    frozenset([('ovea', 'o.ve.a')])]),
+                    frozenset([('ovea', 'o-ve-a')])]),
                 'up': set([
-                    frozenset([('ovea', 'o.ve.a')]),
-                    frozenset([('lasi-a', 'la.si.a')]),
-                    frozenset([('rasia', 'ra.si.a')]),
-                    frozenset([('idea', 'i.de.a')])])}
+                    frozenset([('ovea', 'o-ve-a')]),
+                    frozenset([('lasi-a', 'la-si-a')]),
+                    frozenset([('rasia', 'ra-si-a')]),
+                    frozenset([('idea', 'i-de-a')])])}
         }
+        print self.p.get_entailments()
         assert self.p.get_entailments() == ents
 
     def test_get_non_atomic_entailments(self):
-        with open('test/non_atomic_vowel_entails.txt', 'r') as f:
-            ents = f.read()
+        with open('non_atomic_vowel_entails.pkl', 'rb') as f:
+            ents = cPickle.load(f)
         self.p.dset = data.voweldset
-        assert self.p.get_entailments(atomic=False) == eval(ents)
+        assert self.p.get_entailments(atomic=False) == ents
 
     def check_edge_case(self, dset, grammars, classical):
         self.p.dset = getattr(data, dset)
@@ -267,6 +272,7 @@ class TestPoOT(object):
 
     def test_poot_edge_cases(self):
         self.setUp()
+        assert self.lattice
         for k, v in self.get_all_or_none_edge_cases(False).iteritems():
             yield self.check_edge_case, k, v, False
 
@@ -314,10 +320,9 @@ class TestPoOT(object):
 class TestStats(object):
 
     def setUp(self):
-        lat_dir = '../lattices'
-        ots1 = poot.OTStats(lat_dir)
+        ots1 = poot.OTStats(LAT_DIR)
         ots1.dset = data.voweldset
-        ots2 = poot.OTStats(lat_dir)
+        ots2 = poot.OTStats(LAT_DIR)
         ots2.dset = data.three_const
 
         self.ots1 = ots1
@@ -337,63 +342,63 @@ class TestStats(object):
 
     def test_num_cots_by_cand(self):
         num_by_cand = self.ots1.num_cots_by_cand()
-        assert(num_by_cand[('ovea', 'o.ve.a')] == 8)
-        assert(num_by_cand[('ovea', 'o.vee')] == 16)
-        assert(num_by_cand[('rasia', 'ra.sii')] == 8)
-        assert(num_by_cand[('lasi-a', 'la.si.a')] == 12)
-        assert(num_by_cand[('idea', 'i.de.a')] == 12)
-        assert(num_by_cand[('idea', 'i.dee')] == 12)
-        assert(num_by_cand[('rasia', 'ra.si.a')] == 16)
-        assert(num_by_cand[('lasi-a', 'la.sii')] == 12)
+        assert(num_by_cand[('ovea', 'o-ve-a')] == 8)
+        assert(num_by_cand[('ovea', 'o-vee')] == 16)
+        assert(num_by_cand[('rasia', 'ra-sii')] == 8)
+        assert(num_by_cand[('lasi-a', 'la-si-a')] == 12)
+        assert(num_by_cand[('idea', 'i-de-a')] == 12)
+        assert(num_by_cand[('idea', 'i-dee')] == 12)
+        assert(num_by_cand[('rasia', 'ra-si-a')] == 16)
+        assert(num_by_cand[('lasi-a', 'la-sii')] == 12)
 
     def test_num_cots_by_cand_by_grammar(self):
         grams = sorted(list(self.ots1.get_grammars(False)))
         guess = [self.ots1.num_cots_by_cand(gram) for gram in grams]
         check = [
-            {('rasia', 'ra.si.a'): 8, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 5, ('idea', 'i.de.a'): 8,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 3,
-             ('ovea', 'o.ve.a'): 4, ('ovea', 'o.vee'): 4},
-            {('rasia', 'ra.si.a'): 6, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 5, ('idea', 'i.de.a'): 6,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 5, ('ovea', 'o.vee'): 1},
-            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 1},
-            {('rasia', 'ra.si.a'): 4, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 3, ('idea', 'i.de.a'): 4,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 2},
-            {('rasia', 'ra.si.a'): 5, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 4, ('idea', 'i.de.a'): 5,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 4, ('ovea', 'o.vee'): 1},
-            {('rasia', 'ra.si.a'): 6, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 3, ('idea', 'i.de.a'): 6,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 3,
-             ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 4},
-            {('rasia', 'ra.si.a'): 4, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 4,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 2,
-             ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 2},
-            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 1, ('idea', 'i.de.a'): 3,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 2,
-             ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 2},
-            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 2, ('ovea', 'o.vee'): 1},
-            {('rasia', 'ra.si.a'): 2, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 1, ('idea', 'i.de.a'): 2,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 1},
-            {('rasia', 'ra.si.a'): 3, ('rasia', 'ra.sii'): 0,
-             ('lasi-a', 'la.si.a'): 2, ('idea', 'i.de.a'): 3,
-             ('idea', 'i.dee'): 0, ('lasi-a', 'la.sii'): 1,
-             ('ovea', 'o.ve.a'): 1, ('ovea', 'o.vee'): 2}
+            {('rasia', 'ra-si-a'): 8, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 5, ('idea', 'i-de-a'): 8,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 3,
+             ('ovea', 'o-ve-a'): 4, ('ovea', 'o-vee'): 4},
+            {('rasia', 'ra-si-a'): 6, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 5, ('idea', 'i-de-a'): 6,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 5, ('ovea', 'o-vee'): 1},
+            {('rasia', 'ra-si-a'): 3, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 2, ('idea', 'i-de-a'): 3,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 2, ('ovea', 'o-vee'): 1},
+            {('rasia', 'ra-si-a'): 4, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 3, ('idea', 'i-de-a'): 4,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 2, ('ovea', 'o-vee'): 2},
+            {('rasia', 'ra-si-a'): 5, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 4, ('idea', 'i-de-a'): 5,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 4, ('ovea', 'o-vee'): 1},
+            {('rasia', 'ra-si-a'): 6, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 3, ('idea', 'i-de-a'): 6,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 3,
+             ('ovea', 'o-ve-a'): 2, ('ovea', 'o-vee'): 4},
+            {('rasia', 'ra-si-a'): 4, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 2, ('idea', 'i-de-a'): 4,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 2,
+             ('ovea', 'o-ve-a'): 2, ('ovea', 'o-vee'): 2},
+            {('rasia', 'ra-si-a'): 3, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 1, ('idea', 'i-de-a'): 3,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 2,
+             ('ovea', 'o-ve-a'): 1, ('ovea', 'o-vee'): 2},
+            {('rasia', 'ra-si-a'): 3, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 2, ('idea', 'i-de-a'): 3,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 2, ('ovea', 'o-vee'): 1},
+            {('rasia', 'ra-si-a'): 2, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 1, ('idea', 'i-de-a'): 2,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 1, ('ovea', 'o-vee'): 1},
+            {('rasia', 'ra-si-a'): 3, ('rasia', 'ra-sii'): 0,
+             ('lasi-a', 'la-si-a'): 2, ('idea', 'i-de-a'): 3,
+             ('idea', 'i-dee'): 0, ('lasi-a', 'la-sii'): 1,
+             ('ovea', 'o-ve-a'): 1, ('ovea', 'o-vee'): 2}
         ]
         for g, c in zip(guess, check):
             assert(g == c)

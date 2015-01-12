@@ -24,6 +24,7 @@ Entailments
 """
 import itertools
 import dataset
+from collections import defaultdict
 from ordertheory import Powerset
 from lattice import PartialOrderLattice, TotalOrderLattice
 
@@ -41,10 +42,10 @@ def _ensure_grammardset(fun, *args, **kwargs):
             else:
                 gdset = dataset.ClassicalGrammarDataset()
             gdset.dset = self.dset
-            gdset.cdset = gdset.dset
-            gdset.fdset = gdset.cdset
+            gdset.fdset = gdset.dset
             self._grammardset = gdset.get_grammardset(gdset.fdset,
                                                       self.lattice)
+            self._hbounded = gdset.hbounded
         return fun(self, *args, **kwargs)
     return wrapper
 
@@ -111,15 +112,8 @@ class PoOT(object):
 
     @_ensure_grammardset
     def get_harmonically_bounded_candidates(self):
-        """Get all harmonically bound candidate pairs"""
-        l = []
-        for cand0 in self._grammardset:
-            cand_keys = (k for k in self._grammardset[cand0] if
-                         type(k) is not str)
-            for cand1 in cand_keys:
-                if self._grammardset[cand0][cand1].hbounded:
-                    l.append((cand0.cand, cand1.cand))
-        return l
+        """Retrieve a list of harmonically bounded candidates"""
+        return [cand.cand for cand in self._hbounded]
 
     @_ensure_grammardset
     def get_grammars(self, classical=True):
@@ -213,22 +207,18 @@ class Grammars(object):
         the entire dataset is pos - neg.
 
         """
-        pos_grammars = []
-        for cand in dset:
-            if cand.opt:
-                pos_grammars.append(self.opt_grams(dset[cand], classical))
+        opt_cands = filter(lambda c: c.opt, dset)
+        pos_grammars = [self.opt_grams(dset[c], classical) for c in opt_cands]
+        try:
+            pos = set.intersection(*map(set, pos_grammars))
+        except TypeError:
+            pos = set()
 
-        pos = set.intersection(*map(set, pos_grammars))
-
-        neg_grammars = []
-        for cand in dset:
-            if not cand.opt:
-                neg_grammars.append(self.opt_grams(dset[cand], classical))
-
-        if not neg_grammars:
-            neg_grammars = [[]]
-
-        neg = set.union(*map(set, neg_grammars))
+        non_opt_cands = filter(lambda c: not c.opt, dset)
+        neg_grams = [self.opt_grams(dset[c], classical) for c in non_opt_cands]
+        if not neg_grams:
+            neg_grams = [[]]
+        neg = set.union(*map(set, neg_grams))
 
         return pos.difference(neg)
 
@@ -253,36 +243,37 @@ class Entailments(object):
         cand1.
 
         """
-        lattice = {}
+        self.atomic = atomic
+        lattice = defaultdict(lambda: {'up': set(), 'down': set()})
+        prod = self._get_candidate_comparisons(dset)
+        for cand_grams0, cand_grams1 in filter(lambda x: x[0] and x[1], prod):
+            cand0, grams0 = self._parse_cands_grams(cand_grams0)
+            cand1, grams1 = self._parse_cands_grams(cand_grams1)
+            if grams0.issuperset(grams1):
+                lattice[cand0]['down'].add(cand1)
+            if grams0.issubset(grams1):
+                lattice[cand0]['up'].add(cand1)
+        return lattice
+
+    def _get_candidate_comparisons(self, dset):
         mapping = self.__mapping(dset)
-        if atomic:
-            prod = itertools.product(mapping, mapping)
+        if self.atomic:
+            comps = itertools.product(mapping, mapping)
         else:
             pset = list(Powerset().powerset(mapping))
-            prod = itertools.product(pset, pset)
-        for x, y in prod:
-            if x and y:
-                if atomic:
-                    s = frozenset([x[0].cand])
-                    t = frozenset([y[0].cand])
-                    u = x[1]
-                    v = y[1]
-                else:
-                    s = frozenset([pair[0].cand for pair in x])
-                    t = frozenset([pair[0].cand for pair in y])
-                    u = set.intersection(*map(set, [pair[1] for pair in x]))
-                    v = set.intersection(*map(set, [pair[1] for pair in y]))
-                try:
-                    lattice[s]
-                except KeyError:
-                    lattice.update({s: {'up': set([]), 'down': set([])}})
-                if u.issuperset(v):
-                    lattice[s]['down'].add(t)
-                    if u.issubset(v):
-                        lattice[s]['up'].add(t)
-                elif u.issubset(v):
-                    lattice[s]['up'].add(t)
-        return lattice
+            comps = itertools.product(pset, pset)
+        return comps
+
+    def _parse_cands_grams(self, cand_grams):
+        if self.atomic:
+            return frozenset([cand_grams[0].cand]), cand_grams[1]
+        else:
+            cands = [cand_gram[0].cand for cand_gram in cand_grams]
+            grams = [cand_gram[1] for cand_gram in cand_grams]
+            grams = map(set, grams)
+            grams = set.intersection(*grams)
+            return frozenset(cands), grams
+
 
 
 class OTStats(PoOT):
