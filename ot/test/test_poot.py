@@ -176,6 +176,31 @@ class TestPoOT(object):
                          frozenset([(3, 2), (3, 1), (4, 1), (2, 1)])])
         assert self.p.max(self.p.get_grammars(False)) == max_grams
 
+    def test_get_hbounded_entailments(self):
+        self.p.dset = data.hbounded
+        ents = {
+            frozenset([('i1', 'o1')]): {
+                'down': set([
+                    frozenset([('i1', 'o1')])]),
+                'up': set([
+                    frozenset([('i1', 'o1')]),
+                    frozenset([('i1', 'o2')])])},
+            frozenset([('i1', 'o2')]) : {
+                'down': set([
+                    frozenset([('i1', 'o2')]),
+                    frozenset([('i1', 'o1')])]),
+                'up': set([
+                    frozenset([('i1', 'o2')])])
+            }
+        }
+        #print "desired:", ents
+        #print "recieved:", self.p.get_entailments()
+        #from pprint import pprint
+        #pprint(ents)
+        #pprint(self.p.get_entailments())
+        #import pdb; pdb.set_trace()
+        assert ents == self.p.get_entailments()
+
     def test_get_entailments(self):
         """Gets entailments?"""
         self.p.dset = data.voweldset
@@ -350,6 +375,12 @@ class TestStats(object):
         assert(num_by_cand[('idea', 'i-dee')] == 12)
         assert(num_by_cand[('rasia', 'ra-si-a')] == 16)
         assert(num_by_cand[('lasi-a', 'la-sii')] == 12)
+
+    def test_num_cots_by_cand_hbounded(self):
+        self.ots1.dset = data.hbounded
+        num_by_cand = self.ots1.num_cots_by_cand()
+        assert(num_by_cand[('i1', 'o1')] == 24)
+        assert(num_by_cand[('i1', 'o2')] == 0)
 
     def test_num_cots_by_cand_by_grammar(self):
         grams = sorted(list(self.ots1.get_grammars(False)))

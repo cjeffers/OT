@@ -108,7 +108,7 @@ class PoOT(object):
     def get_nonoptimal_candidates(self):
         """Get all non-optimal candidates."""
         nonopt = [cand.cand for cand in self._grammardset if not cand.opt]
-        return nonopt
+        return nonopt + self.get_harmonically_bounded_candidates()
 
     @_ensure_grammardset
     def get_harmonically_bounded_candidates(self):
@@ -185,7 +185,11 @@ class PoOT(object):
         entailments between sets of candidates.
 
         """
-        return Entailments().get_entails(self._grammardset, atomic)
+        return Entailments().get_entails(
+            self._grammardset,
+            self.get_harmonically_bounded_candidates(),
+            atomic
+        )
 
 
 class Grammars(object):
@@ -235,7 +239,7 @@ class Entailments(object):
         grams = Grammars()
         return [(cand, grams.opt_grams(dset[cand])) for cand in dset]
 
-    def get_entails(self, dset, atomic=True):
+    def get_entails(self, dset, hbounded, atomic=True):
         """Get entailments between (sets of) candidates.
 
         If the optimal grammars for a candidate cand0 are a subset of
@@ -253,6 +257,7 @@ class Entailments(object):
                 lattice[cand0]['down'].add(cand1)
             if grams0.issubset(grams1):
                 lattice[cand0]['up'].add(cand1)
+        self._reinsert_hbounded(lattice, hbounded)
         return lattice
 
     def _get_candidate_comparisons(self, dset):
@@ -267,13 +272,21 @@ class Entailments(object):
     def _parse_cands_grams(self, cand_grams):
         if self.atomic:
             return frozenset([cand_grams[0].cand]), cand_grams[1]
-        else:
+        else:  # may not work correctly with harmonically bounded candidates
             cands = [cand_gram[0].cand for cand_gram in cand_grams]
             grams = [cand_gram[1] for cand_gram in cand_grams]
             grams = map(set, grams)
             grams = set.intersection(*grams)
             return frozenset(cands), grams
 
+    def _reinsert_hbounded(self, lattice, hbounded):
+        for hbound in hbounded:
+            hbound = frozenset((hbound,))
+            lattice[hbound]['down'].add(hbound)
+            lattice[hbound]['up'].add(hbound)
+            for cand in lattice:
+                lattice[cand]['up'].add(hbound)
+                lattice[hbound]['down'].add(cand)
 
 
 class OTStats(PoOT):
@@ -327,4 +340,6 @@ class OTStats(PoOT):
             num_cots = len([cot for cot in opt_cots if
                             cot.issuperset(grammar)])
             ret[cand.cand] = num_cots
+        for hbound in self.get_harmonically_bounded_candidates():
+            ret[hbound] = 0
         return ret

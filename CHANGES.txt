@@ -12,3 +12,4 @@ v0.4.01, 2014-09-12 -- enable PoOTs up to 6 constraints
 v0.4.2, 2014-11-23 -- only calculate grammars once
 v0.4.3, 2014-12-08 -- remove extraneous print statements
 v0.5.0, 2015-01-12 -- remove hbounded candidates when calculating grammars
+v0.5.1, 2015-01-20 -- reinsert hbounded candidates when calculating entailments and statistics
