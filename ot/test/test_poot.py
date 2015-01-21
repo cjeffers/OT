@@ -180,16 +180,16 @@ class TestPoOT(object):
         self.p.dset = data.hbounded
         ents = {
             frozenset([('i1', 'o1')]): {
-                'down': set([
-                    frozenset([('i1', 'o1')])]),
                 'up': set([
+                    frozenset([('i1', 'o1')])]),
+                'down': set([
                     frozenset([('i1', 'o1')]),
                     frozenset([('i1', 'o2')])])},
             frozenset([('i1', 'o2')]) : {
-                'down': set([
+                'up': set([
                     frozenset([('i1', 'o2')]),
                     frozenset([('i1', 'o1')])]),
-                'up': set([
+                'down': set([
                     frozenset([('i1', 'o2')])])
             }
         }

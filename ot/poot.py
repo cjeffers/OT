@@ -280,13 +280,14 @@ class Entailments(object):
             return frozenset(cands), grams
 
     def _reinsert_hbounded(self, lattice, hbounded):
+        hbounded = set(map(frozenset, [(hbound,) for hbound in hbounded]))
+        entailed = set(lattice.keys())
+        entailed.update(hbounded)
         for hbound in hbounded:
-            hbound = frozenset((hbound,))
-            lattice[hbound]['down'].add(hbound)
-            lattice[hbound]['up'].add(hbound)
-            for cand in lattice:
-                lattice[cand]['up'].add(hbound)
-                lattice[hbound]['down'].add(cand)
+            lattice[hbound]['up'].update(entailed)
+            lattice[hbound]['down'].update(hbounded)
+        for cand in lattice:
+            lattice[cand]['down'].update(hbounded)
 
 
 class OTStats(PoOT):
