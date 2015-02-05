@@ -3,6 +3,7 @@
 PoOT -- object for holding data and calling calculation methods
   dset -- the dataset attribute
   lattice -- the lattice attribute
+  apriori -- a pre-determined ranking, used to filter all calculations
   get_optimal_candidates -- return the candidates that are optimal
   get_non_optimal_candidates -- return tho other ones
   get_harmonically_bounded_candidates -- read the name of the function
@@ -44,7 +45,8 @@ def _ensure_grammardset(fun, *args, **kwargs):
             gdset.dset = self.dset
             gdset.fdset = gdset.dset
             self._grammardset = gdset.get_grammardset(gdset.fdset,
-                                                      self.lattice)
+                                                      self.lattice,
+                                                      self._apriori)
             self._hbounded = gdset.hbounded
         return fun(self, *args, **kwargs)
     return wrapper
@@ -54,11 +56,12 @@ class PoOT(object):
 
     MAX_POOT_CONSTRAINTS = 6
 
-    def __init__(self, lat_dir, mongo_db=None):
+    def __init__(self, lat_dir, mongo_db=None, apriori=frozenset([])):
         self._dset = []
         self._lattice = {}
         self._lat_dir = lat_dir
         self._mongo_db = mongo_db
+        self._apriori = apriori
         self._grammardset = None
         self._compatible_cots = None
         self._compatible_poots = None
@@ -229,16 +232,6 @@ class Grammars(object):
 
 class Entailments(object):
 
-    def __mapping(self, dset):
-        """Map candidates to the PoOT grammars that make it optimal.
-
-        Return a list of tuples pairing the candidate to the set of all
-        and only the PoOT grammars that make that candidate optimal.
-
-        """
-        grams = Grammars()
-        return [(cand, grams.opt_grams(dset[cand])) for cand in dset]
-
     def get_entails(self, dset, hbounded, atomic=True):
         """Get entailments between (sets of) candidates.
 
@@ -248,8 +241,9 @@ class Entailments(object):
 
         """
         self.atomic = atomic
+        self.dset = dset
         lattice = defaultdict(lambda: {'up': set(), 'down': set()})
-        prod = self._get_candidate_comparisons(dset)
+        prod = self._get_candidate_comparisons()
         for cand_grams0, cand_grams1 in filter(lambda x: x[0] and x[1], prod):
             cand0, grams0 = self._parse_cands_grams(cand_grams0)
             cand1, grams1 = self._parse_cands_grams(cand_grams1)
@@ -260,14 +254,25 @@ class Entailments(object):
         self._reinsert_hbounded(lattice, hbounded)
         return lattice
 
-    def _get_candidate_comparisons(self, dset):
-        mapping = self.__mapping(dset)
+    def _get_candidate_comparisons(self):
+        mapping = self.__mapping()
         if self.atomic:
             comps = itertools.product(mapping, mapping)
         else:
             pset = list(Powerset().powerset(mapping))
             comps = itertools.product(pset, pset)
         return comps
+
+    def __mapping(self):
+        """Map candidates to the PoOT grammars that make it optimal.
+
+        Return a list of tuples pairing the candidate to the set of all
+        and only the PoOT grammars that make that candidate optimal.
+
+        """
+        grams = Grammars()
+        return [(cand, grams.opt_grams(self.dset[cand])) for cand in self.dset]
+
 
     def _parse_cands_grams(self, cand_grams):
         if self.atomic:

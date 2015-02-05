@@ -276,7 +276,7 @@ class FunctionalInfo(ComparativeInfo):
 class COTDataSet(FunctionalDataSet):
     """Store the Classical OT (COT) grammars that satisfy the dataset"""
 
-    def get_cotdset(self, fdset, lattice):
+    def get_cotdset(self, fdset, lattice, apriori=frozenset([])):
         """Calculate the COT grammars for each pair of candidates.
 
         For each pair cand0 and cand1, add a set containing the maxsets
@@ -285,20 +285,18 @@ class COTDataSet(FunctionalDataSet):
         COT grammars that satisfies that comparison.
 
         """
-        num_pairs = 0
+        apriori_compatible = lattice[apriori]['max']
         for cand0 in fdset.keys():
             for cand1 in fdset[cand0].keys():
-                num_pairs += 1
-                s = set([])
+                cots = set([])
                 cotinfo = fdset[cand0][cand1]
                 if cotinfo.iequal:
-                    cot_gspace = lattice[frozenset([])]['max']
-                    cotinfo.info.update({'cots': cot_gspace})
+                    cots = lattice[frozenset([])]['max']
                 else:
                     for f in cotinfo.fspace:
-                        cots = lattice[frozenset(f)]['max']
-                        s.update(cots)
-                    cotinfo.info.update({'cots': s})
+                        cots.update(lattice[frozenset(f)]['max'])
+                cots = set.intersection(cots, apriori_compatible)
+                cotinfo.info.update({'cots': cots})
                 fdset[cand0][cand1] = COTInfo(cotinfo.info)
         return fdset
 
@@ -313,7 +311,7 @@ class COTInfo(FunctionalInfo):
 class PoOTDataSet(COTDataSet):
     """Store the Partial order OT (PoOT) grammars for the dataset"""
 
-    def get_pootdset(self, fdset, lattice):
+    def get_pootdset(self, fdset, lattice, apriori=frozenset([])):
         """Calculate the PoOT grammars for each pair of candidates
 
         For each pair cand0 and cand1, add a set containing the union
@@ -323,22 +321,20 @@ class PoOTDataSet(COTDataSet):
         requirements of the candidate pair.
 
         """
-        cotdset = self.get_cotdset(fdset, lattice)
-
-        num_pairs = 0
+        cotdset = self.get_cotdset(fdset, lattice, apriori)
+        apriori_compatible = lattice[apriori]['up']
         for cand0 in cotdset:
             for cand1 in cotdset[cand0]:
-                num_pairs += 1
                 pootinfo = cotdset[cand0][cand1]
                 if pootinfo.iequal:
                     poots = lattice[frozenset([])]['up']
                 elif not pootinfo.iequal and not pootinfo.cots:
                     poots = pootinfo.cots
                 else:
-                    downs = []
-                    for cot in pootinfo.cots:
-                        downs.append(lattice[frozenset(cot)]['down'])
+                    downs = [lattice[frozenset(cot)]['down']
+                             for cot in pootinfo.cots]
                     poots = set.union(*map(set, downs))
+                poots = set.intersection(poots, apriori_compatible)
                 pootinfo.info.update({'poots': poots})
                 cotdset[cand0][cand1] = PoOTInfo(pootinfo.info)
         return cotdset
@@ -354,8 +350,8 @@ class PoOTInfo(COTInfo):
 class GrammarDataSet(PoOTDataSet):
     """Store the optimal grammars for each candidate in the dataset"""
 
-    def get_grammardset(self, fdset, lattice):
-        pootdset = self.get_pootdset(fdset, lattice)
+    def get_grammardset(self, fdset, lattice, apriori=frozenset([])):
+        pootdset = self.get_pootdset(fdset, lattice, apriori)
 
         for cand in pootdset:
             opt_cots = self._opt_grams(pootdset[cand])
@@ -383,8 +379,8 @@ class GrammarDataSet(PoOTDataSet):
 
 class ClassicalGrammarDataset(GrammarDataSet):
 
-    def get_grammardset(self, fdset, lattice):
-        cotdset = self.get_cotdset(fdset, lattice)
+    def get_grammardset(self, fdset, lattice, apriori=frozenset([])):
+        cotdset = self.get_cotdset(fdset, lattice, apriori)
         for cand in cotdset:
             opt_cots = self._opt_grams(cotdset[cand])
             cotdset[cand].update({'opt_cots': opt_cots})

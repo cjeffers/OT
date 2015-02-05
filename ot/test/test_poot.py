@@ -75,12 +75,23 @@ class TestPoOT(object):
         ])
         assert self.p.get_grammars(classical=False) == grammars
 
+    def test_get_poot_grammars_with_apriori(self):
+        """Gets PoOT grammars, filtered by an apriori ranking?"""
+        p = poot.PoOT(lat_dir=LAT_DIR, apriori=frozenset([(2, 4)]))
+        p.dset = data.voweldset
+        grammars = set([
+            frozenset([(3, 1), (2, 4)]),
+            frozenset([(3, 1), (2, 4), (2, 1)]),
+            frozenset([(3, 1), (2, 3), (2, 4), (2, 1)]),
+            frozenset([(3, 1), (4, 1), (2, 4), (2, 1)]),
+            frozenset([(4, 1), (3, 1), (2, 3), (2, 4), (2, 1)])
+        ])
+        assert p.get_grammars(classical=False) == grammars
+
     def check_get_big_cot_grammars(self, set_n):
-        print "checking %d" % set_n
         p = poot.PoOT(lat_dir=LAT_DIR)
         p.dset = getattr(data, "trivial_cot_%d" % set_n)
         grams = p.get_grammars(classical=True)
-        print 'queries to lattice:', p._lattice.num_lat_queries
         assert len(grams) == 1
         gram = grams.pop()
         assert len(gram) == sum(range(set_n))
@@ -124,6 +135,22 @@ class TestPoOT(object):
             frozenset([(1, 2), (3, 2), (1, 3), (1, 4), (4, 2), (3, 4)])
         ])
         assert cot_grammars == self.p.get_grammars()
+
+    def test_get_cot_grammars_with_apriori(self):
+        """Gets COT grammars compatible with apriori?"""
+        p = poot.PoOT(lat_dir=LAT_DIR, apriori=frozenset([(1, 2), (3, 2)]))
+        p.dset = data.hbounded
+        cot_grammars = set([
+            frozenset([(1, 2), (3, 2), (1, 3), (1, 4), (4, 3), (4, 2)]),
+            frozenset([(1, 2), (3, 2), (3, 4), (3, 1), (4, 2), (4, 1)]),
+            frozenset([(1, 2), (3, 2), (3, 1), (1, 4), (4, 2), (3, 4)]),
+            frozenset([(1, 2), (3, 2), (1, 3), (1, 4), (3, 4), (2, 4)]),
+            frozenset([(1, 2), (3, 2), (3, 1), (4, 3), (4, 2), (4, 1)]),
+            frozenset([(1, 2), (3, 2), (3, 1), (1, 4), (3, 4), (2, 4)]),
+            frozenset([(1, 2), (3, 2), (1, 3), (4, 3), (4, 2), (4, 1)]),
+            frozenset([(1, 2), (3, 2), (1, 3), (1, 4), (4, 2), (3, 4)])
+        ])
+        assert cot_grammars == p.get_grammars()
 
     def test_no_opt_gives_no_grammars(self):
         """No optimal candidates gives no grammars?"""
@@ -193,12 +220,6 @@ class TestPoOT(object):
                     frozenset([('i1', 'o2')])])
             }
         }
-        #print "desired:", ents
-        #print "recieved:", self.p.get_entailments()
-        #from pprint import pprint
-        #pprint(ents)
-        #pprint(self.p.get_entailments())
-        #import pdb; pdb.set_trace()
         assert ents == self.p.get_entailments()
 
     def test_get_entailments(self):
@@ -265,8 +286,65 @@ class TestPoOT(object):
                     frozenset([('rasia', 'ra-si-a')]),
                     frozenset([('idea', 'i-de-a')])])}
         }
-        print self.p.get_entailments()
         assert self.p.get_entailments() == ents
+
+    def test_entailments_with_apriori(self):
+        self.p.dset = data.apriori_entailments
+        p = poot.PoOT(lat_dir=LAT_DIR, apriori=frozenset([(2, 1)]))
+        p.dset = data.apriori_entailments
+        ents = self.p.get_entailments()
+        apriori_ents = {
+            frozenset([('i1', 'o2')]): {
+                'down': set([frozenset([('i1', 'o2')]),
+                             frozenset([('i2', 'o4')]),
+                             frozenset([('i2', 'o3')]),
+                             frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i1', 'o2')])])
+            },
+            frozenset([('i2', 'o4')]): {
+                'down': set([frozenset([('i2', 'o4')]),
+                             frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i1', 'o2')]),
+                           frozenset([('i2', 'o4')])])
+            },
+            frozenset([('i2', 'o3')]): {
+                'down': set([frozenset([('i2', 'o3')]),
+                             frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i1', 'o2')]),
+                           frozenset([('i2', 'o3')])])
+            },
+            frozenset([('i1', 'o1')]): {
+                'down': set([frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i1', 'o2')]),
+                           frozenset([('i2', 'o4')]),
+                           frozenset([('i2', 'o3')]),
+                           frozenset([('i1', 'o1')])])
+            }
+        }
+        ents = {
+            frozenset([('i1', 'o2')]): {
+                'down': set([frozenset([('i1', 'o2')]),
+                             frozenset([('i2', 'o3')])]),
+                'up': set([frozenset([('i1', 'o2')])])
+            },
+            frozenset([('i2', 'o4')]): {
+                'down': set([frozenset([('i2', 'o4')]),
+                             frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i2', 'o4')])])
+            },
+            frozenset([('i2', 'o3')]): {
+                'down': set([frozenset([('i2', 'o3')])]),
+                'up': set([frozenset([('i1', 'o2')]),
+                           frozenset([('i2', 'o3')])])
+            },
+            frozenset([('i1', 'o1')]): {
+                'down': set([frozenset([('i1', 'o1')])]),
+                'up': set([frozenset([('i2', 'o4')]),
+                           frozenset([('i1', 'o1')])])
+            }
+        }
+        assert self.p.get_entailments() == ents
+        assert p.get_entailments() == apriori_ents
 
     def test_get_non_atomic_entailments(self):
         with open('non_atomic_vowel_entails.pkl', 'rb') as f:

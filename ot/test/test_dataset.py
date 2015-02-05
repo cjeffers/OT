@@ -122,6 +122,21 @@ class COTDataSetTests(unittest.TestCase):
                                                                   str(f))
                         self.assertTrue(s in info.cots, msg)
 
+    def test_cot_apriori(self):
+        """COTDataSet gets correct COT grammars, filtered by a ranking"""
+        apriori = frozenset([(1, 2)])
+        with open('../lattices/gspace_4cons.p', 'rb') as f:
+            lattice = cPickle.load(f)
+        cots = self.cotds.get_cotdset(self.cotds.fdset, lattice,
+                                      apriori=apriori)
+        for cand0 in cots:
+            for cand1 in cots[cand0]:
+                info = cots[cand0][cand1]
+                for cot in info.cots:
+                    msg = "{} is incompatible with apriori: {}".format(
+                        cot, apriori)
+                    self.assertTrue(cot.issuperset(apriori), msg)
+
 
 class PoOTDataSetTests(unittest.TestCase):
 
@@ -145,6 +160,19 @@ class PoOTDataSetTests(unittest.TestCase):
                         msg = "%s in %s's downset not in PoOT" % (str(p),
                                                                   str(c))
                         self.assertTrue(p in info.poots, msg)
+
+    def test_poot_dset_apriori(self):
+        """PoOTDataSet get grammars compatible with apriori?"""
+        apriori = frozenset([(1, 2)])
+        poots = self.pds.get_pootdset(self.pds.fdset, self.lattice,
+                                      apriori=apriori)
+        for cand0 in poots:
+            for cand1 in poots[cand0]:
+                info = poots[cand0][cand1]
+                for poot in info.poots:
+                    msg = "{} is incompatible with apriori {}".format(
+                        poot, apriori)
+                    self.assertTrue(poot.issuperset(apriori), msg)
 
 
 class GrammarDataSetTests(unittest.TestCase):

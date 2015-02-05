@@ -28,6 +28,36 @@ no_rankings = [
                 }
            ]
 
+apriori_entailments = [
+                        {
+                            'input': 'i1',
+                            'output': 'o1',
+                            'vvector': {1: 1, 2: 0, 3: 1},
+                            'optimal': True
+                        },
+
+                        {
+                            'input': 'i1',
+                            'output': 'o2',
+                            'vvector': {1: 0, 2: 1, 3: 0},
+                            'optimal': False
+                        },
+
+                        {
+                            'input': 'i2',
+                            'output': 'o3',
+                            'vvector': {1: 1, 2: 1, 3: 0},
+                            'optimal': False
+                        },
+
+                        {
+                            'input': 'i2',
+                            'output': 'o4',
+                            'vvector': {1: 0, 2: 0, 3: 1},
+                            'optimal': True
+                        }
+]
+
 hbounded = [
                 {   'input': 'i1',
                     'output': 'o1',
