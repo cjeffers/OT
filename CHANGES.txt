@@ -14,3 +14,4 @@ v0.4.3, 2014-12-08 -- remove extraneous print statements
 v0.5.0, 2015-01-12 -- remove hbounded candidates when calculating grammars
 v0.5.1, 2015-01-20 -- reinsert hbounded candidates when calculating entailments and statistics
 v0.6.0, 2015-02-05 -- add a priori ranking filtering to PoOT
+v0.6.1, 2015-02-09 -- add optional apriori argument to poot.get_entailments

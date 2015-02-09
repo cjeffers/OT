@@ -3,9 +3,9 @@
 import cPickle
 import os.path
 
-from nose.tools import raises
-from .. import poot
-from .. import data
+from nose.tools import raises, assert_raises, ok_
+from ot import poot
+from ot import data
 
 LAT_DIR = "lattices"
 
@@ -34,6 +34,44 @@ class TestPoOT(object):
         """PoOT dset setter work with tuples?"""
         self.p.dset = (data.voweldset, 'poop')
         assert self.p.dset == data.voweldset
+
+    def test_apriori_setter(self):
+        self.p.dset = data.voweldset
+        self.p.get_grammars(classical=False)
+        assert self.p.apriori == frozenset([])
+        assert self.p._grammardset is not None
+        assert self.p._compatible_cots is not None
+        assert self.p._compatible_poots is not None
+
+        self.p.apriori = frozenset([])
+        assert self.p.apriori == frozenset([])
+        assert self.p._grammardset is not None
+        assert self.p._compatible_cots is not None
+        assert self.p._compatible_poots is not None
+
+        self.p.apriori = frozenset([(1, 2)])
+        assert self.p.apriori == frozenset([(1, 2)])
+        assert self.p._grammardset is None
+        assert self.p._compatible_cots is None
+        assert self.p._compatible_poots is None
+
+    def test_apriori_setter_bad_values(self):
+        bad_values = [
+            'poop',
+            frozenset([(1, 2, 3)]),
+            frozenset([(1, 2), 1]),
+            frozenset([(1, 2), ('a', 2)]),
+            frozenset([(1, 2), (2, 'a')])
+        ]
+        for value in bad_values:
+            yield self.check_apriori_setter_bad_value, value
+
+    def check_apriori_setter_bad_value(self, value):
+        with assert_raises(ValueError) as ex:
+            self.p.apriori = value
+        ok_(ex.exception.message == ("A priori ranking must be a frozenset of "
+                                     "length-two tuples"),
+            "We get the right exception")
 
     def test_get_optimal_candidates(self):
         """Gets all and only the optimal candidates?"""
@@ -293,6 +331,7 @@ class TestPoOT(object):
         p = poot.PoOT(lat_dir=LAT_DIR, apriori=frozenset([(2, 1)]))
         p.dset = data.apriori_entailments
         ents = self.p.get_entailments()
+        apriori = frozenset([(2, 1)])
         apriori_ents = {
             frozenset([('i1', 'o2')]): {
                 'down': set([frozenset([('i1', 'o2')]),
@@ -345,6 +384,7 @@ class TestPoOT(object):
         }
         assert self.p.get_entailments() == ents
         assert p.get_entailments() == apriori_ents
+        assert self.p.get_entailments(apriori=apriori) == apriori_ents
 
     def test_get_non_atomic_entailments(self):
         with open('non_atomic_vowel_entails.pkl', 'rb') as f:

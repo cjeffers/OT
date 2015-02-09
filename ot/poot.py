@@ -46,7 +46,7 @@ def _ensure_grammardset(fun, *args, **kwargs):
             gdset.fdset = gdset.dset
             self._grammardset = gdset.get_grammardset(gdset.fdset,
                                                       self.lattice,
-                                                      self._apriori)
+                                                      self.apriori)
             self._hbounded = gdset.hbounded
         return fun(self, *args, **kwargs)
     return wrapper
@@ -79,17 +79,13 @@ class PoOT(object):
         if not any(opts):
             raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
-        self._dset = self._dset + value
+        self._dset =  value
         self._compatible_cots = None
         self._compatible_poots = None
 
     @property
     def lattice(self):
         return self._lattice
-
-    @property
-    def num_constraints(self):
-        return len(self.dset[0]['vvector'])
 
     @lattice.setter
     def lattice(self, value):
@@ -100,6 +96,34 @@ class PoOT(object):
                                                 self._mongo_db)
         else:
             self._lattice = TotalOrderLattice(cons)
+
+    @property
+    def apriori(self):
+        return self._apriori
+
+    @apriori.setter
+    def apriori(self, value):
+        if not self._is_good_ranking(value):
+            msg = "A priori ranking must be a frozenset of length-two tuples"
+            raise ValueError(msg)
+        if self._apriori != value:
+            self._grammardset = None
+            self._compatible_cots = None
+            self._compatible_poots = None
+            self._apriori = value
+
+    def _is_good_ranking(self, value):
+        correctly_formatted_elements = map(self._rank_elem_correct, value)
+        return type(value) is frozenset and all(correctly_formatted_elements)
+
+    def _rank_elem_correct(self, elem):
+        return (type(elem) is tuple and
+                len(elem) == 2 and
+                type(elem[0]) is int and
+                type(elem[1]) is int)
+    @property
+    def num_constraints(self):
+        return len(self.dset[0]['vvector'])
 
     @_ensure_grammardset
     def get_optimal_candidates(self):
@@ -180,18 +204,23 @@ class PoOT(object):
                 s.add(grammar)
         return s
 
-    @_ensure_grammardset
-    def get_entailments(self, atomic=True):
+    def get_entailments(self, atomic=True, apriori=None):
         """Get candidate entailments.
 
         If atomic is True, get atomic entailments.  Else, get
         entailments between sets of candidates.
 
         """
+        if apriori is not None:
+            self.apriori = apriori
+        return self.calculate_entailments(atomic=atomic)
+
+    @_ensure_grammardset
+    def calculate_entailments(self, atomic=True):
         return Entailments().get_entails(
             self._grammardset,
             self.get_harmonically_bounded_candidates(),
-            atomic
+            atomic=atomic
         )
 
 
@@ -272,7 +301,6 @@ class Entailments(object):
         """
         grams = Grammars()
         return [(cand, grams.opt_grams(self.dset[cand])) for cand in self.dset]
-
 
     def _parse_cands_grams(self, cand_grams):
         if self.atomic:
