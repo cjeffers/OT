@@ -1,14 +1,14 @@
 sample0 = [
                 {   'input': 'ovea',
                     'output': 'o.ve.a',
-                    'vvector': {1:0, 2:1, 3:1, 4:0},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'ovea',
                     'output': 'o.vee',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
@@ -17,13 +17,13 @@ sample0 = [
 no_rankings = [
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0},
                     'optimal': False,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True
                 }
            ]
@@ -32,28 +32,28 @@ apriori_entailments = [
                         {
                             'input': 'i1',
                             'output': 'o1',
-                            'vvector': {1: 1, 2: 0, 3: 1},
+                            'violation_vector': {1: 1, 2: 0, 3: 1},
                             'optimal': True
                         },
 
                         {
                             'input': 'i1',
                             'output': 'o2',
-                            'vvector': {1: 0, 2: 1, 3: 0},
+                            'violation_vector': {1: 0, 2: 1, 3: 0},
                             'optimal': False
                         },
 
                         {
                             'input': 'i2',
                             'output': 'o3',
-                            'vvector': {1: 1, 2: 1, 3: 0},
+                            'violation_vector': {1: 1, 2: 1, 3: 0},
                             'optimal': False
                         },
 
                         {
                             'input': 'i2',
                             'output': 'o4',
-                            'vvector': {1: 0, 2: 0, 3: 1},
+                            'violation_vector': {1: 0, 2: 0, 3: 1},
                             'optimal': True
                         }
 ]
@@ -61,13 +61,13 @@ apriori_entailments = [
 hbounded = [
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0},
                     'optimal': True,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
            ]
@@ -76,13 +76,13 @@ hbounded = [
 three_const = [
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:0, 3:0},
+                    'violation_vector': {1:0, 2:0, 3:0},
                     'optimal': True,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1},
+                    'violation_vector': {1:1, 2:1, 3:1},
                     'optimal': False,
                 }
            ]
@@ -95,13 +95,13 @@ c0y_c1y_iy_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -110,13 +110,13 @@ c0y_c1y_in_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -125,13 +125,13 @@ c0y_c1n_iy_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -140,13 +140,13 @@ c0n_c1y_iy_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -155,13 +155,13 @@ c0y_c1n_in_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -170,13 +170,13 @@ c0n_c1y_in_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -185,13 +185,13 @@ c0y_c1y_iy_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -200,13 +200,13 @@ c0y_c1n_iy_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -215,13 +215,13 @@ c0n_c1y_iy_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -235,13 +235,13 @@ c0n_c1n_iy_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -250,13 +250,13 @@ c0n_c1n_in_dy = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i2',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -265,13 +265,13 @@ c0n_c1n_iy_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -280,13 +280,13 @@ c0n_c1n_in_dn = [
 
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': False,
                 },
 
                 {   'input': 'i1',
                     'output': 'o2',
-                    'vvector': {1:1, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -294,7 +294,7 @@ c0n_c1n_in_dn = [
 single_opt_cand =[
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': True,
                 }
 ]
@@ -302,7 +302,7 @@ single_opt_cand =[
 single_non_opt_cand =[
                 {   'input': 'i1',
                     'output': 'o1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1},
                     'optimal': False,
                 }
 ]
@@ -312,56 +312,56 @@ single_non_opt_cand =[
 voweldset = [
                 {   'input': 'ovea',
                     'output': 'o-ve-a',
-                    'vvector': {1:0, 2:1, 3:1, 4:0},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'ovea',
                     'output': 'o-vee',
-                    'vvector': {1:0, 2:0, 3:0, 4:1},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'idea',
                     'output': 'i-de-a',
-                    'vvector': {1:0, 2:1, 3:1, 4:0},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'idea',
                     'output': 'i-dee',
-                    'vvector': {1:1, 2:0, 3:0, 4:1},
+                    'violation_vector': {1:1, 2:0, 3:0, 4:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'lasi-a',
                     'output': 'la-si-a',
-                    'vvector': {1:0, 2:0, 3:1, 4:0},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'lasi-a',
                     'output': 'la-sii',
-                    'vvector': {1:0, 2:0, 3:0, 4:1},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'rasia',
                     'output': 'ra-si-a',
-                    'vvector': {1:0, 2:0, 3:1, 4:0},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'rasia',
                     'output': 'ra-sii',
-                    'vvector': {1:1, 2:0, 3:0, 4:1},
+                    'violation_vector': {1:1, 2:0, 3:0, 4:1},
                     'optimal': False,
                 },
         ]
@@ -370,83 +370,83 @@ cv_dset = {
     "constraints" : [ "ONSET", "*CODA", "MAX", "DEP" ],
     "candidates" : [
         { "input" : "CV", "output" : "CV",
-         "optimal" : True, "vvector" : { 1:0, 2:0, 3:0, 4:0 } },
+         "optimal" : True, "violation_vector" : { 1:0, 2:0, 3:0, 4:0 } },
         { "input" : "CV", "output" : "CVC",
-         "optimal" : False, "vvector" : { 1:0, 2:1, 3:0, 4:1 } },
+         "optimal" : False, "violation_vector" : { 1:0, 2:1, 3:0, 4:1 } },
         { "input" : "CV", "output" : "VC",
-         "optimal" : False, "vvector" : { 1:1, 2:1, 3:1, 4:1 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:1, 3:1, 4:1 } },
         { "input" : "CV", "output" : "V",
-         "optimal" : False, "vvector" : { 1:1, 2:0, 3:1, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:0, 3:1, 4:0 } },
         { "input" : "CVC", "output" : "CV",
-         "optimal" : True, "vvector" : { 1:0, 2:0, 3:1, 4:0 } },
+         "optimal" : True, "violation_vector" : { 1:0, 2:0, 3:1, 4:0 } },
         { "input" : "CVC", "output" : "CVC",
-         "optimal" : False, "vvector" : { 1:0, 2:1, 3:0, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:0, 2:1, 3:0, 4:0 } },
         { "input" : "CVC", "output" : "VC",
-         "optimal" : False, "vvector" : { 1:1, 2:1, 3:1, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:1, 3:1, 4:0 } },
         { "input" : "CVC", "output" : "V",
-         "optimal" : False, "vvector" : { 1:1, 2:0, 3:2, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:0, 3:2, 4:0 } },
         { "input" : "VC", "output" : "CV",
-         "optimal" : True, "vvector" : { 1:0, 2:0, 3:1, 4:1 } },
+         "optimal" : True, "violation_vector" : { 1:0, 2:0, 3:1, 4:1 } },
         { "input" : "VC", "output" : "CVC",
-         "optimal" : False, "vvector" : { 1:0, 2:1, 3:0, 4:1 } },
+         "optimal" : False, "violation_vector" : { 1:0, 2:1, 3:0, 4:1 } },
         { "input" : "VC", "output" : "VC",
-         "optimal" : False, "vvector" : { 1:1, 2:1, 3:0, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:1, 3:0, 4:0 } },
         { "input" : "VC", "output" : "V",
-         "optimal" : False, "vvector" : { 1:1, 2:0, 3:1, 4:0 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:0, 3:1, 4:0 } },
         { "input" : "V", "output" : "CV",
-         "optimal" : True, "vvector" : { 1:0, 2:0, 3:0, 4:1 } },
+         "optimal" : True, "violation_vector" : { 1:0, 2:0, 3:0, 4:1 } },
         { "input" : "V", "output" : "CVC",
-         "optimal" : False, "vvector" : { 1:0, 2:1, 3:0, 4:2 } },
+         "optimal" : False, "violation_vector" : { 1:0, 2:1, 3:0, 4:2 } },
         { "input" : "V", "output" : "VC",
-         "optimal" : False, "vvector" : { 1:1, 2:1, 3:0, 4:1 } },
+         "optimal" : False, "violation_vector" : { 1:1, 2:1, 3:0, 4:1 } },
         { "input" : "V", "output" : "V",
-         "optimal" : False, "vvector" : { 1:1, 2:0, 3:0, 4:0 } }
+         "optimal" : False, "violation_vector" : { 1:1, 2:0, 3:0, 4:0 } }
     ]
 }
 
 trivial_cot_6 = [
-    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1 }},
-    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0 }},
-    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1 }},
-    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0 }},
-    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1 }},
-    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0 }},
-    {"input": "d", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1 }},
-    {"input": "d", "output": "f", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0 }},
-    {"input": "e", "output": "g", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1 }},
-    {"input": "e", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0 }}
+    {"input": "a", "output": "b", "optimal": True, "violation_vector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1 }},
+    {"input": "a", "output": "c", "optimal": False, "violation_vector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0 }},
+    {"input": "b", "output": "c", "optimal": True, "violation_vector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1 }},
+    {"input": "b", "output": "e", "optimal": False, "violation_vector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0 }},
+    {"input": "c", "output": "f", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1 }},
+    {"input": "c", "output": "g", "optimal": False, "violation_vector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0 }},
+    {"input": "d", "output": "f", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1 }},
+    {"input": "d", "output": "f", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0 }},
+    {"input": "e", "output": "g", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1 }},
+    {"input": "e", "output": "g", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0 }}
 ]
 
 trivial_cot_7 = [
-    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1 }},
-    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0 }},
-    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1}},
-    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0 }},
-    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1}},
-    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0 }},
-    {"input": "d", "output": "h", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1}},
-    {"input": "d", "output": "i", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0 }},
-    {"input": "e", "output": "j", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1}},
-    {"input": "e", "output": "k", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0 }},
-    {"input": "f", "output": "l", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1}},
-    {"input": "f", "output": "m", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0 }}
+    {"input": "a", "output": "b", "optimal": True, "violation_vector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1 }},
+    {"input": "a", "output": "c", "optimal": False, "violation_vector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "b", "output": "c", "optimal": True, "violation_vector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1}},
+    {"input": "b", "output": "e", "optimal": False, "violation_vector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "c", "output": "f", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1}},
+    {"input": "c", "output": "g", "optimal": False, "violation_vector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0 }},
+    {"input": "d", "output": "h", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1}},
+    {"input": "d", "output": "i", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0 }},
+    {"input": "e", "output": "j", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1}},
+    {"input": "e", "output": "k", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0 }},
+    {"input": "f", "output": "l", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1}},
+    {"input": "f", "output": "m", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0 }}
 ]
 
 trivial_cot_8 = [
-    {"input": "a", "output": "b", "optimal": True, "vvector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
-    {"input": "a", "output": "c", "optimal": False, "vvector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
-    {"input": "b", "output": "c", "optimal": True, "vvector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
-    {"input": "b", "output": "e", "optimal": False, "vvector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
-    {"input": "c", "output": "f", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1, 8:1 }},
-    {"input": "c", "output": "g", "optimal": False, "vvector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0, 8:0 }},
-    {"input": "d", "output": "h", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1, 8:1 }},
-    {"input": "d", "output": "i", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0, 8:0 }},
-    {"input": "e", "output": "j", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1, 8:1 }},
-    {"input": "e", "output": "k", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0, 8:0 }},
-    {"input": "f", "output": "l", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:1 }},
-    {"input": "f", "output": "m", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0, 8:0 }},
-    {"input": "g", "output": "1", "optimal": True, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:1 }},
-    {"input": "g", "output": "o", "optimal": False, "vvector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:0 }}
+    {"input": "a", "output": "b", "optimal": True, "violation_vector": {1:0, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "a", "output": "c", "optimal": False, "violation_vector": {1:1, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "b", "output": "c", "optimal": True, "violation_vector": {1:0, 2:0, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "b", "output": "e", "optimal": False, "violation_vector": {1:0, 2:1, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "c", "output": "f", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "c", "output": "g", "optimal": False, "violation_vector": {1:0, 2:0, 3:1, 4:0, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "d", "output": "h", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:1, 7:1, 8:1 }},
+    {"input": "d", "output": "i", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:1, 5:0, 6:0, 7:0, 8:0 }},
+    {"input": "e", "output": "j", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:1, 8:1 }},
+    {"input": "e", "output": "k", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:1, 6:0, 7:0, 8:0 }},
+    {"input": "f", "output": "l", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:1 }},
+    {"input": "f", "output": "m", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:1, 7:0, 8:0 }},
+    {"input": "g", "output": "1", "optimal": True, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:1 }},
+    {"input": "g", "output": "o", "optimal": False, "violation_vector": {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:1, 8:0 }}
 ]
 
 
@@ -456,315 +456,315 @@ casedset = [
                 {
                     'input': 'act[trans]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD1',
-                    'vvector': {1:1, 2:1, 3:1, 4:1, 5:1, 6:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1, 5:1, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:1, 3:2, 4:2, 5:3, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:2, 4:2, 5:3, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD3',
-                    'vvector': {1:1, 2:1, 3:1, 4:2, 5:2, 6:1},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:2, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD4',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD5',
-                    'vvector': {1:1, 2:1, 3:1, 4:1, 5:1, 6:2},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:1, 5:1, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD6',
-                    'vvector': {1:0, 2:1, 3:2, 4:2, 5:3, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:2, 4:2, 5:3, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[trans]',
                     'output': 'BAD7',
-                    'vvector': {1:1, 2:1, 3:1, 4:2, 5:2, 6:2},
+                    'violation_vector': {1:1, 2:1, 3:1, 4:2, 5:2, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:1},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:1, 3:1, 4:1, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1, 5:2, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD3',
-                    'vvector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD4',
-                    'vvector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:2},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD5',
-                    'vvector': {1:0, 2:1, 3:1, 4:1, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[exist]',
                     'output': 'BAD6',
-                    'vvector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:2},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:1, 3:1, 4:1, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1, 5:1, 6:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:2, 3:2, 4:3, 5:3, 6:0},
+                    'violation_vector': {1:0, 2:2, 3:2, 4:3, 5:3, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:1, 3:1, 4:2, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:2, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD3',
-                    'vvector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD4',
-                    'vvector': {1:0, 2:1, 3:1, 4:1, 5:1, 6:2},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:1, 5:1, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD5',
-                    'vvector': {1:0, 2:2, 3:2, 4:3, 5:3, 6:1},
+                    'violation_vector': {1:0, 2:2, 3:2, 4:3, 5:3, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'act[pred]',
                     'output': 'BAD6',
-                    'vvector': {1:0, 2:1, 3:1, 4:2, 5:2, 6:2},
+                    'violation_vector': {1:0, 2:1, 3:1, 4:2, 5:2, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[trans]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[trans]',
                     'output': 'NOM',
-                    'vvector': {1:1, 2:1, 3:0, 4:1, 5:1, 6:1},
+                    'violation_vector': {1:1, 2:1, 3:0, 4:1, 5:1, 6:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[trans]',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[trans]',
                     'output': 'BAD2',
-                    'vvector': {1:1, 2:1, 3:0, 4:1, 5:1, 6:2},
+                    'violation_vector': {1:1, 2:1, 3:0, 4:1, 5:1, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[exist]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:0},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[exist]',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:1},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[exist]',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:0, 5:1, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[exist]',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:2},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[pred]',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[pred]',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:1, 6:1},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pass[pred]',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:1},
+                    'violation_vector': {1:0, 2:2, 3:0, 4:2, 5:2, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pass[pred]',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:1, 3:0, 4:1, 5:1, 6:2},
+                    'violation_vector': {1:0, 2:1, 3:0, 4:1, 5:1, 6:2},
                     'optimal': False,
                 },
 
                 {
                     'input': 'trans',
                     'output': 'GEN',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'trans',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:0, 5:0, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'trans',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:0, 3:1, 4:1, 5:2, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:1, 4:1, 5:2, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'trans',
                     'output': 'BAD3',
-                    'vvector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:1, 5:1, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'exist',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'output': 'exist',
                     'input': 'BAD1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:0},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pred',
                     'output': 'NOM',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:0, 6:0},
                     'optimal': True,
                 },
 
                 {
                     'input': 'pred',
                     'output': 'BAD1',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:1},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:1, 6:1},
                     'optimal': False,
                 },
 
                 {
                     'input': 'pred',
                     'output': 'BAD2',
-                    'vvector': {1:0, 2:0, 3:0, 4:0, 5:2, 6:2},
+                    'violation_vector': {1:0, 2:0, 3:0, 4:0, 5:2, 6:2},
                     'optimal': False,
                 },
         ]

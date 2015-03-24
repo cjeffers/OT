@@ -23,7 +23,7 @@ class DataSetTests(unittest.TestCase):
             self.assertEqual(c.inp, d['input'], "inputs don't match")
             self.assertEqual(c.out, d['output'], "outputs don't match")
             self.assertEqual(c.opt, d['optimal'], "optimality doesn't match")
-            self.assertEqual(c.vvec, d['vvector'],
+            self.assertEqual(c.vvec, d['violation_vector'],
                              "violation vectors don't match")
 
     def test_candidate_setter(self):
@@ -45,7 +45,7 @@ class DataSetTests(unittest.TestCase):
         for c, d in zip(self.ds.edset, self.vowel_set):
             self.assertEqual(c.inp, d['input'], "inputs don't match")
             self.assertEqual(c.out, d['output'], "outputs don't match")
-            self.assertEqual(c.vvec, d['vvector'],
+            self.assertEqual(c.vvec, d['violation_vector'],
                              "violation vectors don't match")
             self.assertTrue(c.opt, "non-optimal entailment candidate")
 

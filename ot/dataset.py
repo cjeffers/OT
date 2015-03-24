@@ -77,7 +77,7 @@ class Candidate(object):
     def __init__(self, dict0):
         self._inp = dict0['input']
         self._out = dict0['output']
-        self._vvec = dict0['vvector']
+        self._vvec = dict0['violation_vector']
         self._opt = dict0['optimal']
         self.cand = (self._inp, self._out)
 

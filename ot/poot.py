@@ -75,7 +75,7 @@ class PoOT(object):
         if type(value) is tuple:
             value = value[0]
         opts = [value[i]['optimal'] for i, cand in enumerate(value)]
-        self.set_n = len(value[0]['vvector'])
+        self.set_n = len(value[0]['violation_vector'])
         if not any(opts):
             raise ValueError('At least one candidate must be optimal.')
         self.lattice = value
@@ -89,7 +89,7 @@ class PoOT(object):
 
     @lattice.setter
     def lattice(self, value):
-        cons = len(value[0]['vvector'])
+        cons = len(value[0]['violation_vector'])
         if cons <= PoOT.MAX_POOT_CONSTRAINTS:
             self._lattice = PartialOrderLattice(cons,
                                                 self._lat_dir,
@@ -123,7 +123,7 @@ class PoOT(object):
                 type(elem[1]) is int)
     @property
     def num_constraints(self):
-        return len(self.dset[0]['vvector'])
+        return len(self.dset[0]['violation_vector'])
 
     @_ensure_grammardset
     def get_optimal_candidates(self):
