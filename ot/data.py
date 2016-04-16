@@ -59,18 +59,34 @@ apriori_entailments = [
 ]
 
 hbounded = [
-                {   'input': 'i1',
-                    'output': 'o1',
-                    'violation_vector': {1:0, 2:0, 3:0, 4:0},
-                    'optimal': True,
-                },
+    {
+        'input': 'i1',
+        'output': 'o1',
+        'violation_vector': {1: 0, 2: 0, 3: 0, 4: 0},
+        'optimal': True,
+    },
+    {
+        'input': 'i1',
+        'output': 'o2',
+        'violation_vector': {1: 1, 2: 1, 3: 1, 4: 1},
+        'optimal': False,
+    }
+]
 
-                {   'input': 'i1',
-                    'output': 'o2',
-                    'violation_vector': {1:1, 2:1, 3:1, 4:1},
-                    'optimal': False,
-                }
-           ]
+hbounded_optimal = [
+    {
+        'input': 'i1',
+        'output': 'o1',
+        'violation_vector': {1: 1, 2: 0},
+        'optimal': True
+    },
+    {
+        'input': 'i1',
+        'output': 'o2',
+        'violation_vector': {1: 1, 2: 1},
+        'optimal': True
+    }
+]
 
 
 three_const = [

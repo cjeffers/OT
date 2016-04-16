@@ -190,7 +190,7 @@ class ComparativeDataSet(DataSet):
             for cand1 in cdset[cand0].keys():
                 compinfo = cdset[cand0][cand1]
                 comps = self.__comp(cand0.vvec, cand1.vvec)
-                if comps['hbounded']:  # remove hbounded candidates
+                if comps['hbounded'] and not cand1.opt:  # for removal later
                     self.hbounded.add(cand1)
                 compinfo.update(comps)
                 cdset[cand0][cand1] = ComparativeInfo(compinfo)
@@ -198,6 +198,7 @@ class ComparativeDataSet(DataSet):
         return cdset
 
     def _remove_hbounded_cands(self, cdset):
+        #non_optimal_hbounded = [h for h in self.hbounded if not h.opt]
         for hbound in self.hbounded:
             cdset.pop(hbound)
         for cand0 in cdset:

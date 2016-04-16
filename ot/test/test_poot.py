@@ -95,6 +95,12 @@ class TestPoOT(object):
         hbounded = [('i1', 'o2')]
         assert self.p.get_harmonically_bounded_candidates() == hbounded
 
+    def test_hbounded_optimal_has_no_grammars(self):
+        """Hbounded candidates marked optimal --> no grammars?"""
+        self.p.dset = data.hbounded_optimal
+        grams = self.p.get_grammars(classical=False)
+        assert len(grams) == 0
+
     def test_get_poot_grammars(self):
         """Gets all the right PoOT grammars?"""
         self.p.dset = data.voweldset
@@ -250,7 +256,7 @@ class TestPoOT(object):
                 'down': set([
                     frozenset([('i1', 'o1')]),
                     frozenset([('i1', 'o2')])])},
-            frozenset([('i1', 'o2')]) : {
+            frozenset([('i1', 'o2')]): {
                 'up': set([
                     frozenset([('i1', 'o2')]),
                     frozenset([('i1', 'o1')])]),
