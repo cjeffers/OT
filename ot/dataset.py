@@ -198,7 +198,6 @@ class ComparativeDataSet(DataSet):
         return cdset
 
     def _remove_hbounded_cands(self, cdset):
-        #non_optimal_hbounded = [h for h in self.hbounded if not h.opt]
         for hbound in self.hbounded:
             cdset.pop(hbound)
         for cand0 in cdset:
